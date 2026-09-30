@@ -9,6 +9,7 @@ import {
 } from "./fuelwatch";
 import { type FeedQuery, perthDate, perthTimestamp, shiftDate } from "./query";
 import { normaliseStation, type StationFeed } from "./station";
+import { version } from '../package.json';
 
 export const MAX_RESPONSE_BYTES = 4 * 1024 * 1024;
 export const MAX_STATIONS = 5000;
@@ -24,6 +25,7 @@ interface SnapshotMetadata {
     copyright: string;
     documentation: string;
     issues: string;
+    version: string;
 }
 
 /** Single-product clients retain their numeric product; combined responses enumerate all requested fuels. */
@@ -230,7 +232,8 @@ export function metadata(
         copyright:
             "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
         documentation: "https://docs.fuelwatch.oss.bhodges.me",
-        issues: "https://github.com/bradleyhodges/hacs-fuelwatch/issues",
+        issues: "https://github.com/bradleyhodges/fuelwatch-api/issues",
+        version: version,
     };
 }
 

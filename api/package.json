@@ -1,8 +1,8 @@
 {
     "private": true,
     "name": "fuelwatch-api",
-    "version": "1.0.0",
-    "description": "Validated FuelWatch data for the Home Assistant integration",
+    "version": "4.30.1",
+    "description": "A comprehensive, enriched-data, JSON:API-compliant API for FuelWatch (https://fuelwatch.wa.gov.au) data.",
     "main": "src/index.ts",
     "scripts": {
         "dev": "wrangler dev",
