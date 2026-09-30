@@ -11,6 +11,9 @@ alt="fuelwatch-api" height="50"/>
     <a href="https://docs.fuelwatch.oss.bhodges.me">
       <img alt="Documentation site" src="https://img.shields.io/badge/fuelwatch--api-docs-513384.svg" />
     </a>
+    <a href="https://github.com/bradleyhodges/fuelwatch-api/tree/main/api">
+      <img alt="API version" src="https://img.shields.io/github/package-json/v/bradleyhodges/fuelwatch-api?filename=api%2Fpackage.json&color=007f84" />
+    </a>
     <a href="https://github.com/bradleyhodges/fuelwatch-api">
 				<img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repo" />
     </a>
