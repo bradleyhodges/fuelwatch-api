@@ -99,12 +99,12 @@ which would provide a response similar to this:
             "asAt": "2026-09-30T06:00:00.000+08:00",
             "products": {
                 "1": {
-                    "name": "Unleaded Petrol",
-                    "amount": 212.9
+                  "name": "Unleaded Petrol",
+                  "amount": 212.9
                 },
                 "4": {
-                    "name": "Diesel",
-                    "amount": 266.9
+                  "name": "Diesel",
+                  "amount": 266.9
                 }
             }
         },
