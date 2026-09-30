@@ -10,7 +10,7 @@ const directory = fileURLToPath(new URL("../public", import.meta.url));
 const registry = JSON.parse(
     await readFile(
         new URL(
-            "../../custom_components/fuelwatch_wa/reference_data.json",
+            "../../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json",
             import.meta.url,
         ),
         "utf8",

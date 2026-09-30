@@ -10,7 +10,7 @@
         "watch_dir": [
             "../custom_components/fuelwatch_wa/assets/brands",
             "src/asset-headers.json",
-            "../custom_components/fuelwatch_wa/reference_data.json",
+            "../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json",
             "scripts/prepare-assets.mjs"
         ]
     },

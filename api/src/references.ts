@@ -1,4 +1,4 @@
-import data from "../../custom_components/fuelwatch_wa/reference_data.json";
+import data from "../../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json";
 import { ApiError } from "./errors";
 import type { Station } from "./station";
 

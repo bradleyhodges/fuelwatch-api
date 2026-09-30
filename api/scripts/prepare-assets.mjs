@@ -14,14 +14,14 @@ import {
 import headers from "../src/asset-headers.json" with { type: "json" };
 
 const source = new URL(
-    "../../custom_components/fuelwatch_wa/assets/brands/",
+    "../../../hacs-fuelwatch/custom_components/fuelwatch_wa/assets/brands/",
     import.meta.url,
 );
 const output = new URL("../public/static/image/brand/", import.meta.url);
 const registry = JSON.parse(
     await readFile(
         new URL(
-            "../../custom_components/fuelwatch_wa/reference_data.json",
+            "../../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json",
             import.meta.url,
         ),
         "utf8",
