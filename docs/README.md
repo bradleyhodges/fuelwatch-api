@@ -29,6 +29,7 @@ Set `NEXT_PUBLIC_SITE_URL=https://docs.fuelwatch.oss.bhodges.me` for production 
 - `src/lib/reference-codes.json` is the documentation snapshot of brand, product, feature, restriction and region codes. Never infer identifiers from array positions.
 - `src/lib/shared.ts` supplies FuelWatch branding, repository links and the canonical docs origin.
 - Search, `/llms.txt`, `/llms-full.txt` and per-page Markdown all use the same content collection.
+- `src/lib/reference-markdown.ts` renders reference schemas, field tables and JSON examples into readable Markdown and searchable text. Field-table props must use static literals; the exporter never executes MDX expressions.
 - Keep SDK installation, authentication scaffolding and unreleased SDK methods out of this site.
 
 Read `../api/src/{query,jsonapi,station,references,cache,index,errors}.ts` before editing behavioral claims. The tests validate the OpenAPI document and examples, reference codes, links, navigation and search. New routes need prose, a specification operation and validation.

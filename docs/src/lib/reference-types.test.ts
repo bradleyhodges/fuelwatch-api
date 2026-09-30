@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     buildReferenceExample,
+    findReferenceShape,
     getReferenceEnumValues,
     getReferenceShape,
     getReferenceTypeHref,
@@ -27,6 +28,8 @@ describe("HTTP schema reference", () => {
         ]);
     });
     it("derives field nullability and presence from the published specification", () => {
+        expect(findReferenceShape("BrandCode | Brand")?.typeName).toBe("Brand");
+        expect(findReferenceShape("ProductCode[]")).toBeUndefined();
         const station = getReferenceShape("StationAttributes");
         expect(station?.fields.find((field) => field.name === "phone")).toMatchObject({
             type: "string | null",

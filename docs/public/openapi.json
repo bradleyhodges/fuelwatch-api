@@ -521,9 +521,6 @@
               "X-FuelWatch-Fetched-At": {
                 "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
               },
-              "Vary": {
-                "$ref": "#/components/headers/Vary"
-              },
               "Access-Control-Allow-Origin": {
                 "$ref": "#/components/headers/Access-Control-Allow-Origin"
               }
@@ -619,9 +616,6 @@
               },
               "X-FuelWatch-Fetched-At": {
                 "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
-              },
-              "Vary": {
-                "$ref": "#/components/headers/Vary"
               },
               "Access-Control-Allow-Origin": {
                 "$ref": "#/components/headers/Access-Control-Allow-Origin"
@@ -1432,6 +1426,10 @@
             "type": "string",
             "description": "Issue tracker URL.",
             "format": "uri"
+          },
+          "version": {
+            "type": "string",
+            "description": "Worker package version that rendered this document. Distinct from the /v1 route and JSON:API version; cached documents can retain the previous version."
           }
         },
         "required": [
@@ -1443,7 +1441,8 @@
           "publicationStatus",
           "copyright",
           "documentation",
-          "issues"
+          "issues",
+          "version"
         ],
         "oneOf": [
           {
@@ -2445,7 +2444,8 @@
             "publicationStatus": "available",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
-            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
           },
           "data": [
             {
@@ -2501,7 +2501,8 @@
             "publicationStatus": "available",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
-            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
           },
           "data": [
             {
@@ -2567,7 +2568,8 @@
             "publicationStatus": "empty",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
-            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
           },
           "data": []
         }
@@ -2588,7 +2590,8 @@
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
             "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
-            "product": 1
+            "product": 1,
+            "version": "4.30.1"
           },
           "data": [
             {

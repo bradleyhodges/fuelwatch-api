@@ -10,13 +10,17 @@ description: Compatibility behavior for existing RSS-shaped JSON consumers.
     <ReferenceHeader title="Read the legacy feed" method="GET" path="/legacy" hideTitle={true}>
       This route retains a JSON wrapper around validated RSS-shaped records. New consumers should use /v1.
     </ReferenceHeader>
-    <FieldTable title="Differences from /v1" fields={[
-      {name: "Envelope", type: "LegacyDocument", description: "An object containing feed, not a JSON:API document."},
-      {name: "Default product", type: "integer", defaultValue: "1", description: "Unleaded only unless product is supplied."},
-      {name: "Station fields", type: "RSS-shaped", description: "Hyphenated source fields and string prices/coordinates remain."},
-      {name: "Enrichment", type: "none", description: "No provider fields or normalized station enrichment."},
-      {name: "Expansion", type: "unsupported", description: "expand is rejected, even when empty."}
-    ]} />
+
+### Differences from /v1
+
+| Convention | Legacy behavior |
+| --- | --- |
+| Envelope | A `LegacyDocument` object containing `feed`, not a JSON:API document. |
+| Default product | `1` (Unleaded) unless `product` is supplied. |
+| Station fields | Hyphenated RSS fields and string prices/coordinates. |
+| Enrichment | No provider fields or normalized station enrichment. |
+| Expansion | `expand` is rejected, even when empty. |
+
   </div>
   <CodeRail>
 

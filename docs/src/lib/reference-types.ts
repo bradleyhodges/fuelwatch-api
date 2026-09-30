@@ -107,7 +107,8 @@ export function getReferenceShape(typeName: string): ReferenceShape | undefined 
     };
 }
 export function findReferenceShape(type: string): ReferenceShape | undefined {
-    const name = getReferenceTypeNames(type)[0];
+    // Expand object fields in unions such as BrandCode | Brand; scalar codes have no children.
+    const name = getReferenceTypeNames(type).find((candidate) => schemas[candidate].properties);
     return name ? getReferenceShape(name) : undefined;
 }
 

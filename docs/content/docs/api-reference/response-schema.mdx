@@ -64,5 +64,7 @@ Prices are JSON numbers in Australian cents per litre; product keys are strings.
 - `meta.product` appears for one selected fuel; `meta.products` appears for multiple selected fuels. They never coexist.
 - Unknown informational metadata can be added without changing the station resource contract.
 
+`meta.version` identifies the Worker package that rendered the document. It is separate from the `/v1` route and `jsonapi.version` (the JSON:API document version). A cached response can retain a previous Worker version until it expires.
+
 Enrichment does not introduce RSS `title`, `image`, `description` or `schemaVersion` fields. See [station details and attribution](/docs/enrichment) for source precedence.
 

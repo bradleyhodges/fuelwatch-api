@@ -1,5 +1,6 @@
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
+import { stringifyReference } from "./src/lib/reference-markdown";
 
 // You can customize Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
@@ -8,7 +9,7 @@ export const docs = defineDocs({
     docs: {
         schema: pageSchema,
         postprocess: {
-            includeProcessedMarkdown: true,
+            includeProcessedMarkdown: { stringify: stringifyReference },
         },
     },
     meta: {
@@ -18,6 +19,6 @@ export const docs = defineDocs({
 
 export default defineConfig({
     mdxOptions: {
-        // MDX options
+        remarkStructureOptions: { stringify: { stringify: stringifyReference } },
     },
 });

@@ -12,12 +12,16 @@ Each `serviceStation` resource combines a station's selected fuel prices with no
     <ReferenceHeader title="Read published prices" method="GET" path="/v1">
       No account, token or API key is required. Omit product to request all supported fuels, or select the product codes your application needs.
     </ReferenceHeader>
-    <FieldTable title="At a glance" fields={[
-      {name: "API origin", type: "https://fuelwatch.oss.bhodges.me", description: "Use /v1 for station resources."},
-      {name: "Response media type", type: "application/vnd.api+json", description: "No charset parameter."},
-      {name: "Price unit", type: "Australian cents per litre", description: "185.9 means AUD 1.859 per litre."},
-      {name: "Time zone", type: "AWST (+08:00)", description: "Price periods run from 06:00 to 06:00 the next day."}
-    ]} />
+
+### At a glance
+
+| Convention | Value |
+| --- | --- |
+| API origin | `https://fuelwatch.oss.bhodges.me`; use `/v1` for station resources. |
+| Response media type | `application/vnd.api+json`, without a charset parameter. |
+| Price unit | Australian cents per litre: `185.9` means AUD 1.859 per litre. |
+| Time zone | AWST (`+08:00`); price periods run from 06:00 to 06:00 the next day. |
+
   </div>
   <CodeRail>
 

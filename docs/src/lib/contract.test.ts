@@ -6,7 +6,7 @@ import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import specification from "../../public/openapi.json";
 import codes from "./reference-codes.json";
-import { source } from "./source";
+import { getLLMText, source } from "./source";
 
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv);
@@ -109,6 +109,24 @@ describe("published HTTP contract", () => {
 
 describe("documentation navigation and examples", () => {
     const pages = source.getPages();
+    it("exports schema fields, tables and JSON examples as readable Markdown", async () => {
+        const schemas = source.getPage(["api-reference", "response-schema"]);
+        const stations = source.getPage(["api-reference", "service-stations"]);
+        if (!schemas || !stations) throw new Error("Missing API reference pages");
+        const schemaText = await getLLMText(schemas);
+        const stationText = await getLLMText(stations);
+        expect(schemaText).toContain("googleMapsUri");
+        expect(schemaText).toContain("## StationAttributes");
+        expect(schemaText).not.toContain("<TypeShape");
+        expect(stationText).toContain('"type": "serviceStation"');
+        expect(stationText).toContain("| product | ProductCode[] |");
+        expect(stationText).not.toMatch(/<(ApiExample|FieldTable|RequiredHeaders)/);
+        expect(
+            schemas.data.structuredData.contents.some((item) =>
+                item.content.includes("googleMapsUri"),
+            ),
+        ).toBe(true);
+    });
     it("contains only FuelWatch API content with valid internal routes and schema anchors", async () => {
         expect(pages.length).toBe(16);
         const urls = new Set(pages.map((page) => page.url));
