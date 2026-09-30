@@ -37,6 +37,7 @@ alt="fuelwatch-api" height="50"/>
 ## 👏 Key Features
 
 - Fully typed TypeScript API.
+- No account or API keys required. 
 - Read grouped product prices in Australian cents per litre, with explicit AWST price periods.
 - Stable brand, feature, and restriction codes. Expand the fields you need into named objects.
 - Service methods return `{ data, error }` results for straightforward script ergonomics.
