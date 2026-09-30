@@ -96,11 +96,17 @@ which would provide a response similar to this:
           "logo": "/static/image/brand/bp.svg"
         },
         "price": {
-          "asAt": "2026-09-30T06:00:00.000+08:00",
-          "products": {
-            "1": 212.9,
-            "4": 266.9
-          }
+            "asAt": "2026-09-30T06:00:00.000+08:00",
+            "products": {
+                "1": {
+                    "name": "Unleaded 91",
+                    "amount": 212.9
+                },
+                "4": {
+                    "name": "Diesel",
+                    "amount": 266.9
+                }
+            }
         },
         "address": {
           "street": "16 Main St",
