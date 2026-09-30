@@ -8,18 +8,10 @@ alt="fuelwatch-api" height="50"/>
 <h3>A comprehensive, enriched-data, JSON:API-compliant API for <a href="https://fuelwatch.wa.gov.au">FuelWatch</a> data</h3>
 
 <p align="center">
-    <a href="https://docs.fuelwatch.oss.bhodges.me">
-      <img alt="Documentation site" src="https://img.shields.io/badge/fuelwatch--api-docs-513384.svg" />
-    </a>
-    <a href="https://github.com/bradleyhodges/fuelwatch-api/tree/main/api">
-      <img alt="API version" src="https://img.shields.io/github/package-json/v/bradleyhodges/fuelwatch-api?filename=api%2Fpackage.json&color=007f84" />
-    </a>
-    <a href="https://github.com/bradleyhodges/fuelwatch-api">
-				<img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repo" />
-    </a>
-    <a href="https://github.com/bradleyhodges/fuelwatch-api/blob/stable/LICENSE">
-				<img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="License: MIT" />
-    </a>
+    <a href="https://docs.fuelwatch.oss.bhodges.me"><img alt="Documentation site" src="https://img.shields.io/badge/fuelwatch--api-docs-513384.svg" /></a> 
+    <a href="https://github.com/bradleyhodges/fuelwatch-api/tree/main/api"><img alt="API version" src="https://img.shields.io/github/package-json/v/bradleyhodges/fuelwatch-api?filename=api%2Fpackage.json&color=007f84" /></a> 
+    <a href="https://github.com/bradleyhodges/fuelwatch-api"><img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repo" /></a> 
+    <a href="https://github.com/bradleyhodges/fuelwatch-api/blob/stable/LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="License: MIT" /></a>
 </p>
 
 <p align="center"><b>fuelwatch-api</b> is a high-performance REST-based API for consuming Western Australian fuel price data from <a href="https://fuelwatch.wa.gov.au">FuelWatch</a>. The API uses the JSON:API v1.1 specification and provides additional functionality, including automatic data conditioning, standardised objects and response models, and service station data enrichment.</p>
