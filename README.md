@@ -55,7 +55,7 @@ See [the full API specification docs](https://docs.fuelwatch.oss.bhodges.me/docs
 | `region` | Comma-separated region codes exported in `src/fuelwatch.ts` | All regions |
 | `brand` | Comma-separated brand codes exported in `src/fuelwatch.ts` | All brands |
 | `surrounding` | `yes` or `no` | Origin default |
-| `expand` | `brand`, `siteFeatures`, `restrictions`, or `all` | None |
+| `expand` | `all`, **OR** one or more of `brand`, `siteFeatures`, `restrictions`, `product`, comma-separated | None |
 
 For example, you can expand all of the reference codes using the `?expand=all` parameter:
 
@@ -99,7 +99,7 @@ which would provide a response similar to this:
             "asAt": "2026-09-30T06:00:00.000+08:00",
             "products": {
                 "1": {
-                    "name": "Unleaded 91",
+                    "name": "Unleaded Petrol",
                     "amount": 212.9
                 },
                 "4": {
