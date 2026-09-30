@@ -1,0 +1,49 @@
+{
+    "$schema": "./node_modules/wrangler/config-schema.json",
+    "name": "fuelwatch-api-proxy",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-09-29",
+    "compatibility_flags": ["nodejs_compat"],
+    "workers_dev": false,
+    "build": {
+        "command": "node scripts/prepare-assets.mjs",
+        "watch_dir": [
+            "../custom_components/fuelwatch_wa/assets/brands",
+            "src/asset-headers.json",
+            "../custom_components/fuelwatch_wa/reference_data.json",
+            "scripts/prepare-assets.mjs"
+        ]
+    },
+    "assets": {
+        "directory": "./public",
+        "binding": "ASSETS",
+        "run_worker_first": ["/", "/v1", "/legacy"],
+        "html_handling": "none",
+        "not_found_handling": "none"
+    },
+    "routes": [
+        { "pattern": "fuelwatch.oss.bhodges.me", "custom_domain": true }
+    ],
+    "observability": { "enabled": true, "head_sampling_rate": 1 },
+    "vars": {
+        "FUELWATCH_URL": "https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS",
+        "GOOGLE_DAILY_REQUEST_LIMIT": "300",
+        "ENRICHMENT_BATCH_SIZE": "100",
+        "ENRICHMENT_REFRESH_DAYS": "30"
+    },
+    "triggers": { "crons": ["0 * * * *", "*/15 * * * *"] },
+    "secrets": {
+        "required": ["GOOGLE_MAPS_API_KEY"]
+    },
+    "d1_databases": [
+        {
+            "binding": "FUELWATCH_DB",
+            "database_name": "fuelwatch",
+            "database_id": "75bbb7d0-7095-402a-aa7f-88f740bf37e2",
+            "migrations_dir": "migrations"
+        }
+    ],
+    "placement": {
+        "mode": "smart"
+    }
+}

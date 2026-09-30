@@ -1,0 +1,8 @@
+{
+    "Content-Type": "image/svg+xml",
+    "Cache-Control": "public, max-age=86400",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "ETag",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; img-src data:; sandbox"
+}

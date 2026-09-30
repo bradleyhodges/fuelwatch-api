@@ -1,0 +1,43 @@
+{
+    "jsonapi": {
+        "version": "1.1"
+    },
+    "meta": {
+        "source": "fuelwatch.wa.gov.au",
+        "product": 1,
+        "sourceDate": "2026-09-29",
+        "fetchedAt": "2026-09-29T16:00:00.000+08:00",
+        "validFrom": "2026-09-29T06:00:00.000+08:00",
+        "validUntil": "2026-09-30T06:00:00.000+08:00",
+        "publicationStatus": "available"
+    },
+    "data": [
+        {
+            "type": "serviceStation",
+            "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+            "attributes": {
+                "name": "Example Station",
+                "brand": 5,
+                "price": {
+                    "asAt": "2026-09-29T06:00:00.000+08:00",
+                    "products": {
+                        "1": 185.9
+                    }
+                },
+                "address": {
+                    "street": "1 Test Road",
+                    "suburb": "PERTH",
+                    "state": "WA",
+                    "postcode": null
+                },
+                "phone": null,
+                "latitude": -31.95,
+                "longitude": 115.86,
+                "is24Hours": null,
+                "restrictions": null,
+                "tradingName": "Example Station",
+                "siteFeatures": []
+            }
+        }
+    ]
+}
