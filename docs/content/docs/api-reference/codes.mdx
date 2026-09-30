@@ -1,0 +1,179 @@
+---
+title: Reference codes
+description: Complete product, brand, site-feature, restriction and region identifiers.
+---
+
+Codes are stable identifiers, never list positions. The tables below describe the current source contract. Names are display values; use codes for supported numeric filters. There is no reference-data endpoint.
+
+## Products
+
+| Code | Name |
+| --- | --- |
+| 1 | Unleaded Petrol |
+| 2 | Premium Unleaded 95 |
+| 4 | Diesel |
+| 5 | LPG |
+| 6 | Premium Unleaded 98 |
+| 10 | E85 |
+| 11 | Brand Diesel |
+
+Price maps contain string keys such as `"1"`; product filter values and `meta.product(s)` use the same identifiers. Product 3 is not supported.
+
+## Brands
+
+| Code | Name | Logo |
+| --- | --- | --- |
+| 0 | Unknown | `/static/image/brand/generic.svg` |
+| 2 | Ampol | `/static/image/brand/generic.svg` |
+| 3 | Better Choice | `/static/image/brand/better_choice.svg` |
+| 4 | BOC | `/static/image/brand/generic.svg` |
+| 5 | BP | `/static/image/brand/bp.svg` |
+| 6 | Caltex | `/static/image/brand/caltex.svg` |
+| 7 | Gull | `/static/image/brand/gull.svg` |
+| 10 | Liberty | `/static/image/brand/liberty.svg` |
+| 11 | Mobil | `/static/image/brand/mobil.svg` |
+| 14 | Shell | `/static/image/brand/shell.svg` |
+| 15 | Independent | `/static/image/brand/generic.svg` |
+| 23 | United | `/static/image/brand/united.svg` |
+| 24 | Eagle | `/static/image/brand/eagle_petroleum.svg` |
+| 25 | FastFuel 24/7 | `/static/image/brand/fastfuel.svg` |
+| 26 | Puma | `/static/image/brand/puma.svg` |
+| 27 | Vibe | `/static/image/brand/vibe.svg` |
+| 29 | 7-Eleven | `/static/image/brand/7_eleven.svg` |
+| 30 | Metro Petroleum | `/static/image/brand/metro_petroleum.svg` |
+| 31 | WA Fuels | `/static/image/brand/wa_fuel.svg` |
+| 32 | Costco | `/static/image/brand/costco.svg` |
+| 34 | Atlas | `/static/image/brand/atlas_fuel.svg` |
+| 35 | EG Ampol | `/static/image/brand/eg_ampol.svg` |
+| 36 | CGL fuel | `/static/image/brand/cambridge_gulf.svg` |
+| 37 | X Convenience | `/static/image/brand/x_convenience.svg` |
+| 38 | Phoenix | `/static/image/brand/phoenix.svg` |
+| 39 | Burk | `/static/image/brand/burk.svg` |
+| 40 | Petro Fuels | `/static/image/brand/petro_fuels.svg` |
+| 41 | Astron | `/static/image/brand/astron.svg` |
+| 42 | OTR | `/static/image/brand/generic.svg` |
+| 43 | Reddy Express | `/static/image/brand/shell_reddy_express.svg` |
+| 44 | Dunning's | `/static/image/brand/dunnings.svg` |
+| 45 | Perrys | `/static/image/brand/perrys.svg` |
+| 46 | UGO | `/static/image/brand/ugo.svg` |
+| 47 | Maisey Fuels | `/static/image/brand/maisey_fuels.svg` |
+| 48 | OMG Caltex | `/static/image/brand/generic.svg` |
+| 49 | OMG Metro | `/static/image/brand/omg_metro.svg` |
+| 50 | Solo | `/static/image/brand/solo.svg` |
+| 52 | Broome Diesel | `/static/image/brand/broome_diesel.svg` |
+| 53 | Fuel Tech | `/static/image/brand/fuel_tech.svg` |
+
+Brand 0 is response-only: it represents an unmapped source brand and is not accepted by the brand filter. Read `sourceNotes.brand` or expand the brand to preserve its original name. Independent is code 15.
+
+## Site features
+
+| Code | Name |
+| --- | --- |
+| 1 | Credit Cards |
+| 2 | Debit Cards |
+| 3 | Fuel Cards |
+| 4 | ATM |
+| 5 | Toilets |
+| 6 | Bottled Gas |
+| 7 | Trailer Hire |
+| 8 | EFTPOS |
+| 9 | Restaurant |
+| 10 | Carwash |
+| 11 | Workshop |
+| 12 | Air |
+| 13 | Water |
+| 14 | Ice |
+| 15 | Discount |
+| 16 | Voucher |
+| 17 | Bottled AdBlue |
+| 18 | Pumped AdBlue |
+| 19 | Truck Friendly |
+| 20 | Convenience Store |
+| 21 | Open 24 hours |
+
+Features are normalized from source text and optionally supplemented by Google. An empty list does not certify that facilities are absent. The current API does not filter by feature.
+
+## Restrictions
+
+| Code | Name |
+| --- | --- |
+| 1 | Unmanned site (credit card charges may apply) |
+| 2 | Entry Permit Required |
+| 3 | Membership Required |
+| 4 | Low Aromatic Fuel |
+
+Unclassified restriction text remains in `sourceNotes.restrictions`. There is no restriction filter. Null means no known controlled restrictions were supplied.
+
+## Regions
+
+| Code | Name |
+| --- | --- |
+| 1 | Boulder |
+| 2 | Broome |
+| 3 | Busselton (Townsite) |
+| 4 | Carnarvon |
+| 5 | Collie |
+| 6 | Dampier |
+| 7 | Esperance |
+| 8 | Kalgoorlie |
+| 9 | Karratha |
+| 10 | Kununurra |
+| 11 | Narrogin |
+| 12 | Northam |
+| 13 | Port Hedland |
+| 14 | South Hedland |
+| 15 | Albany |
+| 16 | Bunbury |
+| 17 | Geraldton |
+| 18 | Mandurah |
+| 19 | Capel |
+| 20 | Dardanup |
+| 21 | Greenough |
+| 22 | Harvey |
+| 23 | Murray |
+| 24 | Waroona |
+| 25 | Metro North |
+| 26 | Metro South |
+| 27 | Metro East/Hills |
+| 28 | Augusta / Margaret River |
+| 29 | Busselton (Shire) |
+| 30 | Bridgetown / Greenbushes |
+| 31 | Donnybrook / Balingup |
+| 32 | Manjimup |
+| 33 | Cataby |
+| 34 | Coolgardie |
+| 35 | Cunderdin |
+| 36 | Dalwallinu |
+| 37 | Denmark |
+| 38 | Derby |
+| 39 | Dongara |
+| 40 | Exmouth |
+| 41 | Fitzroy Crossing |
+| 42 | Jurien |
+| 43 | Kambalda |
+| 44 | Kellerberrin |
+| 45 | Kojonup |
+| 46 | Meekatharra |
+| 47 | Moora |
+| 48 | Mount Barker |
+| 49 | Newman |
+| 50 | Norseman |
+| 51 | Ravensthorpe |
+| 53 | Tammin |
+| 54 | Williams |
+| 55 | Wubin |
+| 56 | York |
+| 57 | Regans Ford |
+| 58 | Meckering |
+| 59 | Wundowie |
+| 60 | North Bannister |
+| 61 | Munglinup |
+| 62 | Northam (Shire) |
+| 63 | Bodallin |
+
+Region codes are filter identifiers, not fields returned on each station. They are not interchangeable with state-region groupings or postcodes. Region selections use upstream membership, as explained in [Filtering](/docs/filtering).
+
+## Evolving code tables
+
+Do not infer future codes, renumber existing values or assume alphabetical ordering. If your application bundles these tables, update them with contract changes or request expansion for display labels. The docs test suite compares the source product, brand and region maps and controlled feature/restriction labels with this snapshot.
+

@@ -1,0 +1,88 @@
+---
+title: Getting started
+description: Make your first request and read a station's published prices.
+---
+
+## Request a selection
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Read unleaded prices" method="GET" path="/v1" hideTitle={true}>
+      Product 1 is unleaded petrol. The default day is the current Perth calendar date. Each result is one station, even when several products are selected.
+    </ReferenceHeader>
+    <Note>
+      Before 06:00 AWST, yesterday's price period is still in effect. Use `day=yesterday` for currently effective prices at that time. See [price periods](/docs/price-periods).
+    </Note>
+  </div>
+  <CodeRail>
+
+```bash title="Request"
+curl --fail-with-body \
+  'https://fuelwatch.oss.bhodges.me/v1?product=1' \
+  -H 'Accept: application/vnd.api+json'
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+## Read the document
+
+The collection is `data`. Station fields live under `attributes`, and `attributes.price.products` maps product IDs to cents per litre. JSON object keys are strings: use `products["1"]`, not a property named `unleaded`.
+
+The following response is illustrative. Its fixed dates and prices are not a live quote.
+
+<ApiExample name="SingleProduct" />
+
+Check `meta.sourceDate`, `validFrom`, `validUntil` and `publicationStatus` before treating prices as currently effective. A successful request can have an empty `data` array.
+
+## Use a native HTTP client
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Read and compare a product">
+      This JavaScript example uses the built-in fetch API. It handles HTTP failures and excludes stations without the requested product before sorting locally.
+    </ReferenceHeader>
+    <ImportantNote>
+      Brand, feature and restriction values are numeric codes by default. Use [expansion](/docs/expansion) if your application needs labels.
+    </ImportantNote>
+  </div>
+  <CodeRail>
+
+```js title="JavaScript"
+const url = new URL("https://fuelwatch.oss.bhodges.me/v1");
+url.searchParams.set("product", "1");
+url.searchParams.set("expand", "brand");
+
+const response = await fetch(url, {
+  headers: { Accept: "application/vnd.api+json" },
+  signal: AbortSignal.timeout(15000),
+});
+if (!response.ok) {
+  const error = await response.json().catch(() => null);
+  throw new Error(error?.errors?.[0]?.detail ?? "HTTP " + response.status);
+}
+const document = await response.json();
+
+const now = Date.now();
+if (
+  document.meta.publicationStatus !== "available" ||
+  now < Date.parse(document.meta.validFrom) ||
+  now >= Date.parse(document.meta.validUntil)
+) {
+  throw new Error("This snapshot is not currently effective.");
+}
+
+const stations = document.data
+  .filter(({ attributes }) => typeof attributes.price.products["1"] === "number")
+  .sort((a, b) => a.attributes.price.products["1"] - b.attributes.price.products["1"]);
+
+for (const { attributes } of stations) {
+  console.log(attributes.name, attributes.brand.name, attributes.price.products["1"]);
+}
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+Persist the last valid snapshot and its ETag if the application must survive network outages. A failure must not turn an old quote into a newly fetched one. See [conditional requests](/docs/caching#conditional-requests) and [error handling](/docs/errors).
+

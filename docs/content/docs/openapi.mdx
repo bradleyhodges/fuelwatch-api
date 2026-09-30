@@ -1,0 +1,50 @@
+---
+title: OpenAPI specification
+description: Download the machine-readable HTTP contract and understand its limits.
+---
+
+The downloadable [OpenAPI 3.1 document](/openapi.json) describes the API origin, endpoints, parameters, response headers, station schemas, reference codes, examples and errors. It can be imported into compatible API clients and tooling.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Download the specification">
+      This is documentation, not a new Worker endpoint. The file is hosted on the documentation origin.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```bash title="Download"
+curl --fail-with-body \
+  'https://docs.fuelwatch.oss.bhodges.me/openapi.json' \
+  --output fuelwatch-openapi.json
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+## What the schemas describe
+
+- Numeric code or expanded-object reference variants.
+- One grouped resource per station and selected date.
+- Product-keyed numeric prices, nullability and optional enrichment.
+- Exactly one of `meta.product` or `meta.products`.
+- AWST timestamps, E.164 phone syntax and weekday hours.
+- JSON:API success/error envelopes and the separate legacy contract.
+- Bodyless `HEAD`, `304` and preflight responses.
+
+The schema tables in this site are derived from this file. Full compact, expanded and empty examples are checked against the schemas as part of the docs test suite. Examples are illustrative, not a live catalogue.
+
+## Rules that also need prose
+
+Standard OpenAPI cannot fully express case-insensitive parameter names, alias exclusivity, repeated query-name rejection, request-time Perth date ranges, the conditional 24-combination bound or the relationship between `expand` and response shape. Follow the [filtering](/docs/filtering), [expansion](/docs/expansion) and [price-period](/docs/price-periods) guides as well.
+
+Comma-separated arrays use `style: form` and `explode: false`. Some clients default to repeated keys instead; configure them to send `product=1,2` rather than `product=1&product=2`.
+
+`info.version` identifies this documentation contract, not a discovery or server-version endpoint. The public route is `/v1`. Confirm deployed behavior when coordinating a rollout.
+
+## Compatibility
+
+Ignore new informational `meta` members and preserve provider attribution. Do not infer station identity from array order, treat absent product prices as zero, or assume every reference code is already known to an older client.
+
+No SDK is described or generated as part of this site. Native HTTP examples work independently of any future SDK.
+

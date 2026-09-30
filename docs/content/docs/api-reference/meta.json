@@ -1,0 +1,12 @@
+{
+  "title": "API reference",
+  "pages": [
+    "index",
+    "service-stations",
+    "response-schema",
+    "codes",
+    "logos",
+    "legacy",
+    "http"
+  ]
+}

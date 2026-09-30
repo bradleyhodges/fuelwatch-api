@@ -1,0 +1,57 @@
+---
+title: Station details and attribution
+description: Source priority, optional provider data and unknown station information.
+---
+
+FuelWatch supplies the price and source station identity. Normalization gives contact details, opening hours, features and restrictions consistent shapes. Optional Google Maps enrichment can add information, but public requests never contact Google.
+
+## Source priority
+
+| Field | Behavior |
+| --- | --- |
+| Price, name, trading name, brand, street, suburb, coordinates | FuelWatch values remain authoritative. Google does not replace them. |
+| Postcode | A confident provider match can fill a missing postcode. |
+| Phone | A valid provider number fills a missing source value. An explicitly invalid or ambiguous FuelWatch number blocks replacement. |
+| Site features | Known provider facilities can add to the controlled FuelWatch feature list. |
+| Opening hours | FuelWatch wins for each supplied weekday, including explicit closed days. Provider hours can fill missing days. |
+| Restrictions | Normalized from FuelWatch; provider data does not invent restrictions. |
+
+Missing values are not evidence of absence. `is24Hours=null` means unknown. An empty feature array means no recognized features were supplied.
+
+## Phone numbers
+
+Phones are valid E.164 numbers or `null`. Australian numbers are interpreted with the Australian default region. If a supplied source value is invalid, includes multiple numbers or cannot be represented safely, the original is retained in `sourceNotes.phone` instead of guessing.
+
+## Opening hours
+
+Schedules use local AWST weekday names and `HH:mm-HH:mm` intervals. Split shifts are comma-separated; `Closed` means explicitly closed. A closing time before the opening time denotes the next day. `24:00` is permitted only as a closing boundary. Unknown days are omitted.
+
+```json title="Illustrative partial schedule"
+{
+  "is24Hours": false,
+  "openHours": {
+    "Monday": "06:00-12:00,13:00-20:30",
+    "Friday": "20:00-02:00",
+    "Sunday": "Closed"
+  }
+}
+```
+
+Confirmed 24-hour stations have `is24Hours=true` and omit `openHours`. Invalid source schedules remain in `sourceNotes.openHours` and block provider replacement. A confirmed source 24-hour schedule cannot be narrowed by Google.
+
+## Enrichment provenance
+
+`enrichment` appears only when provider fields actually contribute to the result. Its `fields` array identifies those fields; `fetchedAt` and `stale` describe provider freshness. `provider` is `Google Maps`, alongside `placeId`, `googleMapsUri` and third-party `attributions`.
+
+Retain this attribution when displaying the provider's fields. See the [Google Places attribution guidance](https://developers.google.com/maps/documentation/places/web-service/policies).
+
+Provider lookups run independently of price refreshes. Missing configuration, exhausted budget, no confident match, expired data or an unavailable enrichment database can all produce FuelWatch-only responses. A `200` does not imply that every station has enrichment.
+
+Provider data can be served after its refresh deadline with `stale=true`, but never at 30 days old or older. At the configured 30-day refresh interval there is no stale grace period. Cached rendered responses can delay the appearance of newly stored enrichment, subject to their own bounded lifetime.
+
+## Unknown source text
+
+`sourceNotes` retains unclassified brand, feature, restriction, phone and opening-hour text. These are optional troubleshooting/display fields, not additional controlled codes. Treat them as untrusted text when rendering HTML, and do not parse them as a stable machine vocabulary.
+
+Matching uses name, location, address and brand evidence; ambiguous candidates are rejected. A successful web search alone does not establish that two station records refer to the same physical site.
+

@@ -1,0 +1,79 @@
+---
+title: Caching and conditional requests
+description: Reuse published snapshots safely and understand freshness headers.
+---
+
+FuelWatch API has two cache layers. D1 snapshots share validated source data across users. Rendered edge responses cache a particular normalized query and expansion set near the caller.
+
+A published snapshot is reusable for up to six hours from its original fetch. Reading it never restarts that lifetime. Hourly warming can replace the shared D1 extract; already-rendered edge responses remain valid until their own expiry.
+
+## Response lifetime
+
+The actual response lifetime is the shortest applicable limit: remaining source age, next Perth midnight, the price-period end, and any enrichment refresh/retention boundary. Empty or unpublished results use at most 30 seconds.
+
+Typical published headers:
+
+```http
+Cache-Control: public, max-age=0, s-maxage=21599
+ETag: "opaque-response-validator"
+X-FuelWatch-Cache: HIT
+X-FuelWatch-Snapshot-Cache: MISS
+X-FuelWatch-Source-Date: 2026-09-29
+X-FuelWatch-Fetched-At: 2026-09-29T16:00:00.000+08:00
+Vary: Accept
+```
+
+These are illustrative values. `max-age=0` requires browser/private caches to revalidate; `s-maxage` applies to shared caches. Follow the returned headers instead of assuming a fresh six-hour window. Errors, expired periods and other uncacheable responses use `no-store`.
+
+`X-FuelWatch-Cache` is `HIT` or `MISS` for the rendered response. `X-FuelWatch-Snapshot-Cache` is `HIT`, `MISS` or `BYPASS` from when that response was built. An edge hit can therefore still carry `Snapshot-Cache: MISS`; it does not mean another RSS request just occurred.
+
+## Conditional requests
+
+Store the exact quoted ETag with its URL and payload, then send `If-None-Match` for that same selection. A matching response is `304` with no body. Keep the stored document and original fetch timestamp; do not try to parse JSON from a `304`.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Revalidate prices" method="GET" path="/v1">
+      Validators describe the entire response document. Expansion, provider metadata or fetch-time changes can change the ETag even when numeric fuel prices stay the same.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```js title="Conditional fetch"
+async function readPrices(url, previous) {
+  const headers = { Accept: "application/vnd.api+json" };
+  if (previous?.url === url) headers["If-None-Match"] = previous.etag;
+
+  const response = await fetch(url, {
+    headers,
+    signal: AbortSignal.timeout(15000),
+  });
+  if (response.status === 304) {
+    if (!previous) throw new Error("No stored document for this validator");
+    return previous;
+  }
+  if (!response.ok) throw new Error("Price request failed: " + response.status);
+  return {
+    url,
+    etag: response.headers.get("ETag"),
+    document: await response.json(),
+  };
+}
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+`HEAD` follows the same validation and caching path as `GET`, with no body; it can still trigger a cold source fetch. It is not a cheap cache-only probe.
+
+## Efficient clients
+
+- Request only products and geography your application needs.
+- Prefer `surrounding=no` for exact suburbs so queries reuse catalogue extracts.
+- Normalize your own selection and retain ETags; avoid random cache-busting parameters, which are rejected.
+- Poll at a cadence suited to daily prices. Hourly polling aligns with catalogue warming, but is not a promised service-level agreement.
+- Respect `Retry-After` and use bounded backoff for transient failures.
+- Preserve the last good snapshot without presenting expired prices as current.
+
+The Worker has no public cache-purge or force-refresh parameter. A request cannot force Google enrichment. Different edge locations can have different rendered cache states while sharing D1 source snapshots.
+

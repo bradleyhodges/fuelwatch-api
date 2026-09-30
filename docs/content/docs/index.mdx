@@ -1,0 +1,51 @@
+---
+title: Overview
+description: Western Australian fuel prices through a public, read-only JSON API.
+---
+
+The FuelWatch API makes published Western Australian fuel prices easier to use in applications, automations and Home Assistant integrations. It is an independent project maintained by [Bradley Hodges](https://github.com/bradleyhodges), using price data from [FuelWatch WA](https://www.fuelwatch.wa.gov.au).
+
+Each `serviceStation` resource combines a station's selected fuel prices with normalized address, contact and facility information. The API uses JSON:API 1.1 response documents, compact reference codes and explicit AWST price periods.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Read published prices" method="GET" path="/v1">
+      No account, token or API key is required. Omit product to request all supported fuels, or select the product codes your application needs.
+    </ReferenceHeader>
+    <FieldTable title="At a glance" fields={[
+      {name: "API origin", type: "https://fuelwatch.oss.bhodges.me", description: "Use /v1 for station resources."},
+      {name: "Response media type", type: "application/vnd.api+json", description: "No charset parameter."},
+      {name: "Price unit", type: "Australian cents per litre", description: "185.9 means AUD 1.859 per litre."},
+      {name: "Time zone", type: "AWST (+08:00)", description: "Price periods run from 06:00 to 06:00 the next day."}
+    ]} />
+  </div>
+  <CodeRail>
+
+```bash title="Two fuels, with brand details"
+curl 'https://fuelwatch.oss.bhodges.me/v1?product=1,2&expand=brand' \
+  -H 'Accept: application/vnd.api+json'
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+## Start here
+
+- [Getting started](/docs/getting-started): make a request and read grouped prices.
+- [Filtering](/docs/filtering): select fuels, brands, regions, suburbs and dates.
+- [Expansion](/docs/expansion): choose numeric codes or populated references.
+- [API reference](/docs/api-reference): endpoints, headers, fields and code tables.
+- [OpenAPI specification](/docs/openapi): download a machine-readable contract.
+
+## What to expect
+
+Published source snapshots are cached for up to six hours and refreshed hourly for the unfiltered product catalogue. Response lifetimes can be shorter at time boundaries. Cached responses may outlive an hourly refresh; read the [caching guide](/docs/caching) before choosing a polling strategy.
+
+Optional Google Maps enrichment fills some missing station details. It never changes FuelWatch prices or source identity, and can be absent. Keep [attribution](/docs/enrichment) with enriched information.
+
+<Note>
+This site documents the current Worker source contract. A deployed version may lag behind it. The service is independent of the WA Government; the upstream price publisher is identified by `meta.source`.
+</Note>
+
+The API is read-only. It has no login, mutations, station detail route, pagination, server-side sort or separate reference-data endpoint. Examples use ordinary HTTP clients; no SDK is required.
+

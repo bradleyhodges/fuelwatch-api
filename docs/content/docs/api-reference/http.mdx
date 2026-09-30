@@ -1,0 +1,55 @@
+---
+title: HTTP behavior
+description: Media negotiation, headers, redirects and browser access.
+---
+
+## Request and response headers
+
+No authorization header, cookie or API key is required.
+
+| Header | Behavior |
+| --- | --- |
+| `Accept` | Prefer `application/vnd.api+json` on `/v1`. Missing or compatible wildcard values are accepted. `application/json` alone is not sufficient. |
+| `Content-Type` | GET has no request body and needs no content type. If JSON:API is supplied, unsupported parameters cause `415`. |
+| `If-None-Match` | Revalidate the same representation with its stored ETag. A match returns `304` without a body. |
+| `Vary` | `Accept` is included on `/v1` responses and errors. |
+| `Cache-Control` | Describes remaining shared freshness or `no-store`; see [caching](/docs/caching). |
+
+`/v1` always uses `application/vnd.api+json` without a charset parameter. No JSON:API extensions are applied. Unknown profiles are ignored. Unsupported media parameters or extensions in an otherwise unacceptable `Accept` header produce `406`; an acceptable alternative can accompany an unsupported one. Explicit exclusion with `q=0` is not overridden by a less-specific wildcard.
+
+Media validation runs before cache access, including HEAD and conditional requests. Supplying an ETag does not bypass validation.
+
+## Public CORS
+
+Data routes return `Access-Control-Allow-Origin: *`. They expose `ETag`, `Retry-After`, `X-FuelWatch-Cache`, `X-FuelWatch-Snapshot-Cache`, `X-FuelWatch-Source-Date` and `X-FuelWatch-Fetched-At` to browser clients.
+
+`OPTIONS` returns `204` for supported GET/HEAD/OPTIONS preflights, echoes requested headers, and advertises a one-day preflight lifetime. Unsupported requested methods return `405` with no body. The Worker is public and does not enable credentialed CORS; use requests without cookies.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Preflight a conditional request" method="OPTIONS" path="/v1">
+      Applications can use ETag revalidation from another origin. Image asset behavior is documented separately.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```bash title="Preflight"
+curl -i -X OPTIONS 'https://fuelwatch.oss.bhodges.me/v1' \
+  -H 'Origin: https://example.com' \
+  -H 'Access-Control-Request-Method: GET' \
+  -H 'Access-Control-Request-Headers: if-none-match'
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+## Root redirect
+
+GET or HEAD `/` returns `302` to `/v1` on the same origin, preserving the query string. The redirect uses `no-store`. Query validity is checked at the destination, not before redirecting. Prefer the explicit `/v1` URL in integrations.
+
+## Unsupported requests
+
+Known data paths accept GET, HEAD and OPTIONS; other methods return `405` with `Allow: GET, HEAD, OPTIONS`. Unknown paths return `404`. Route pathnames are case-sensitive and do not have trailing-slash aliases: `/V1` and `/v1/` are not `/v1`.
+
+Requests have no body semantics. No pagination or individual resource links are advertised. The API does not supply a public cache invalidation, health, version-discovery or refresh route.
+

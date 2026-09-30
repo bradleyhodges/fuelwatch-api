@@ -1,0 +1,18 @@
+---
+title: API reference
+description: Every public route implemented by the FuelWatch Worker.
+---
+
+The production origin is `https://fuelwatch.oss.bhodges.me`. Requests are public and read-only.
+
+| Route | Methods | Purpose |
+| --- | --- | --- |
+| [`/v1`](/docs/api-reference/service-stations) | GET, HEAD, OPTIONS | JSON:API service-station collection |
+| [`/legacy`](/docs/api-reference/legacy) | GET, HEAD, OPTIONS | RSS-shaped JSON compatibility |
+| [`/`](/docs/api-reference/http#root-redirect) | GET, HEAD, OPTIONS | Redirect to `/v1` with the query preserved |
+| [`/static/image/brand/{filename}`](/docs/api-reference/logos) | GET, HEAD | Supplied SVG brand artwork |
+
+There are no separate routes for one station, product definitions, brands, facilities, restrictions, postcode searches, authentication or writes. Use the [code tables](/docs/api-reference/codes) and [expansion](/docs/expansion) with the station collection.
+
+Read [HTTP behavior](/docs/api-reference/http) for content negotiation, CORS and conditionals. The [response schemas](/docs/api-reference/response-schema) describe every normalized field, while [OpenAPI](/docs/openapi) provides the machine-readable contract.
+

@@ -1,0 +1,57 @@
+---
+title: Service stations
+description: GET /v1 returns one resource per station with all selected fuel prices.
+---
+
+## GET /v1
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Read service stations" method="GET" path="/v1" hideTitle={true}>
+      Returns a complete validated collection for one selected Perth date. Omit product for all seven supported fuels. No pagination is applied.
+    </ReferenceHeader>
+    <RequiredHeaders />
+    <FieldTable title="Query parameters" fields={[
+      {name: "product", type: "ProductCode[]", description: "Comma-separated product codes. Defaults to all seven."},
+      {name: "brand", type: "BrandCode[]", description: "Comma-separated known FuelWatch brand codes. Code 0 is response-only."},
+      {name: "region", type: "integer[]", description: "Comma-separated region codes. Uses source-side selection."},
+      {name: "suburb", type: "string[]", description: "Comma-separated suburb names. Pair with surrounding=no for exact suburbs."},
+      {name: "day", type: "string", defaultValue: "today", description: "yesterday, today, tomorrow or DD/MM/YYYY within those three Perth dates."},
+      {name: "surrounding", type: "string", allowedValues: ["yes", "no"], description: "Omission uses source behavior; no gives exact suburb matching."},
+      {name: "expand", type: "string[]", description: "brand, siteFeatures, restrictions or all. Omitted references are codes."}
+    ]} />
+  </div>
+  <CodeRail>
+
+```bash title="Request"
+curl 'https://fuelwatch.oss.bhodges.me/v1?product=1,2' \
+  -H 'Accept: application/vnd.api+json'
+```
+
+<ApiExample name="Compact" />
+
+  </CodeRail>
+</ReferenceGrid>
+
+All six filters also accept `filter[...]` names. Query parsing, aliases and combination limits are described in [Filtering](/docs/filtering).
+
+## Collection behavior
+
+The response contains `jsonapi`, `meta` and `data`. A station selling multiple selected fuels appears once. `price.products` contains only its available selected products. A single-product query uses the same grouped shape.
+
+Resource `type` is always `serviceStation`. The `id` combines `sourceDate` with a SHA-256 digest of normalized station identity. It is stable across product selections, expansion, price corrections and enrichment changes, but not across source dates. Treat it as opaque; there is no `/v1/{id}` endpoint. A moved or otherwise reidentified station can receive a different identity.
+
+Ordering is deterministic for a selection but is not a global cheapest-station ranking across fuels. Sort locally for the product you are comparing. Do not persist row indexes as station identifiers.
+
+## Completeness and bounds
+
+Every required source request must validate before the API publishes success. Conflicting quotes, invalid dates/prices/coordinates, unsafe XML and excessive input reject the selection. Individual source responses are bounded to 4 MiB and 5,000 stations; combined selections are limited to 10,000 input quotes. Source-filtered combined input is also bounded to 16 MiB.
+
+An empty `data` array is a valid `200` result. A missing product at a station is unavailable, not zero-priced. Unknown phone/postcode/schedule values remain null or omitted as specified.
+
+## HEAD and OPTIONS
+
+`HEAD /v1` uses the same query, validation, status, ETag and cache semantics as `GET`, then omits the body. A matching `If-None-Match` gives `304`. `OPTIONS /v1` provides public CORS preflight; it does not read prices.
+
+See [HTTP behavior](/docs/api-reference/http), [caching](/docs/caching) and the [error catalogue](/docs/errors).
+

@@ -1,0 +1,15 @@
+{
+  "title": "FuelWatch API",
+  "pages": [
+    "index",
+    "getting-started",
+    "filtering",
+    "expansion",
+    "price-periods",
+    "caching",
+    "enrichment",
+    "errors",
+    "api-reference",
+    "openapi"
+  ]
+}

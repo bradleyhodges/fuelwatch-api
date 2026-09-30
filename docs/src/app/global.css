@@ -1,0 +1,307 @@
+/** biome-ignore-all lint/complexity/noImportantStyles: existing docs theme overrides generated Fumadocs and modal styles. */
+/** biome-ignore-all lint/style/noDescendingSpecificity: selector order follows docs sections rather than specificity ordering. */
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* ─── Base ─────────────────────────────────────────────────────────── */
+
+:root {
+    --fd-layout-width: 2140px;
+}
+
+html {
+    scrollbar-gutter: stable;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3 {
+    text-wrap: balance;
+}
+
+p,
+li {
+    text-wrap: pretty;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+html.dark body {
+    background-color: #191919;
+}
+
+#nd-page section a {
+    @apply text-[#056dff] transition-colors font-bold;
+}
+
+#nd-page section a:hover {
+    @apply text-[#193cb8] transition-colors font-bold underline;
+}
+
+/* ─── Sidebar: animated active indicator ───────────────────────────── */
+
+.nd-sidebar a,
+[data-fd-sidebar] a {
+    transition:
+        color 120ms ease,
+        background-color 120ms ease,
+        opacity 120ms ease;
+    position: relative;
+}
+
+.nd-sidebar [data-active="true"],
+[data-fd-sidebar] [data-active="true"] {
+    position: relative;
+}
+
+.nd-sidebar [data-active="true"]::before,
+[data-fd-sidebar] [data-active="true"]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 55%;
+    min-height: 12px;
+    width: 2px;
+    background: var(--fd-primary);
+    border-radius: 0 2px 2px 0;
+    animation: sidebar-indicator 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sidebar-indicator {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) scaleY(0.4);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) scaleY(1);
+    }
+}
+
+/* Hover state for sidebar items */
+.nd-sidebar a:hover,
+[data-fd-sidebar] a:hover {
+    opacity: 0.9;
+}
+
+/* ─── TOC: smooth active state ──────────────────────────────────────── */
+
+[class*="toc"] a,
+aside[aria-label*="contents"] a,
+aside[aria-label*="page"] a {
+    transition:
+        color 120ms ease,
+        opacity 120ms ease;
+}
+
+/* ─── Code Rail ─────────────────────────────────────────────────────── */
+
+.fuelwatch-code-rail figure {
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgb(255 255 255 / 6%);
+    background-color: #ecf1f6 !important;
+    font-weight: 600;
+}
+
+/* Title bar */
+.fuelwatch-code-rail figure > [data-rehype-pretty-code-title],
+.fuelwatch-code-rail figure > figcaption,
+.fuelwatch-code-rail [data-title] {
+    background-color: #f4f7fa !important;
+    border-bottom: 1px solid rgb(255 255 255 / 7%);
+    color: rgb(226 232 240 / 55%);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 9px 16px;
+    letter-spacing: 0.01em;
+}
+
+/* Code body */
+.fuelwatch-code-rail pre,
+.fuelwatch-code-rail pre.shiki,
+.fuelwatch-code-rail div[role="region"] {
+    background-color: #f4f7fa !important;
+    color: #1a2c44;
+    font-weight: 400;
+}
+
+html.dark .fuelwatch-code-rail pre,
+html.dark .fuelwatch-code-rail pre.shiki,
+html.dark .fuelwatch-code-rail div[role="region"],
+html.dark .fuelwatch-code-rail [data-title],
+html.dark .fuelwatch-code-rail figure {
+    background-color: #000000 !important;
+    color: #ffffff;
+}
+
+aside.fuelwatch-code-rail {
+    @apply space-y-6;
+}
+
+.fuelwatch-code-rail pre.shiki span {
+    color: var(--shiki-dark);
+}
+
+/* Line numbers */
+.fuelwatch-code-rail [data-line-numbers] .line::before {
+    color: rgb(226 232 240 / 18%);
+    min-width: 2rem;
+}
+
+/* Copy button: fade in on hover */
+.fuelwatch-code-rail [data-copy],
+.fuelwatch-code-rail button[aria-label*="copy"],
+.fuelwatch-code-rail button[aria-label*="Copy"] {
+    opacity: 0;
+    transition: opacity 150ms ease;
+}
+
+.fuelwatch-code-rail figure:hover [data-copy],
+.fuelwatch-code-rail figure:hover button[aria-label*="copy"],
+.fuelwatch-code-rail figure:hover button[aria-label*="Copy"] {
+    opacity: 1;
+}
+
+.fuelwatch-code-rail figcaption {
+    @apply uppercase;
+}
+
+/* ─── Prose headings: scroll margin + hover anchor ──────────────────── */
+
+.prose h2,
+.prose h3,
+.prose h4 {
+    scroll-margin-top: 5rem;
+}
+
+article h2.group\/heading {
+    @apply pt-12 mt-16 before:content-[''] before:w-[calc(100%+112px)] before:h-px before:bg-fd-border before:absolute before:top-0 before:-left-14 relative lg:pt-24 lg:mt-30;
+}
+
+article h2.group\/heading:first-child {
+    @apply before:hidden! mt-0 pt-12;
+}
+
+article .prose p ~ h2.group\/heading:first-of-type {
+    @apply mt-12 pt-12 lg:mt-16 lg:pt-16;
+}
+/* ─── Page content: fade-in on load ─────────────────────────────────── */
+
+main {
+    animation: page-in 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Reference section dividers ────────────────────────────────────── */
+
+.not-prose + .not-prose {
+    margin-top: 0;
+}
+
+/* ─── Tables in prose ────────────────────────────────────────────────── */
+
+.prose table {
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.prose table th {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 10px 14px;
+}
+
+.prose table td {
+    padding: 10px 14px;
+    vertical-align: top;
+}
+
+.prose table code {
+    font-size: 13px;
+}
+
+/* ─── Inline code in prose ───────────────────────────────────────────── */
+
+.prose :not(pre) > code {
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 0.875em;
+}
+
+/* ─── Body scroll lock fix ───────────────────────────────────────────── */
+
+html > body[data-scroll-locked] {
+    margin-right: 0px !important;
+    --removed-body-scroll-bar-size: 0px !important;
+}
+
+@theme {
+    --color-fd-background: hsl(0, 0%, 96%);
+    --color-fd-foreground: hsl(0, 0%, 3.9%);
+    --color-fd-muted: hsl(0, 0%, 96.1%);
+    --color-fd-muted-foreground: hsl(0, 0%, 45.1%);
+    --color-fd-popover: hsl(0, 0%, 98%);
+    --color-fd-popover-foreground: hsl(0, 0%, 15.1%);
+    --color-fd-card: hsl(0, 0%, 94.7%);
+    --color-fd-card-foreground: hsl(0, 0%, 3.9%);
+    --color-fd-border: hsla(0, 0%, 80%, 50%);
+    --color-fd-primary: hsl(0, 0%, 9%);
+    --color-fd-primary-foreground: hsl(0, 0%, 98%);
+    --color-fd-secondary: hsl(0, 0%, 93.1%);
+    --color-fd-secondary-foreground: hsl(0, 0%, 9%);
+    --color-fd-accent: hsla(0, 0%, 82%, 50%);
+    --color-fd-accent-foreground: hsl(0, 0%, 9%);
+    --color-fd-ring: hsl(0, 0%, 63.9%);
+}
+
+.dark {
+    --color-fd-background: hsl(0, 0%, 7.04%);
+    --color-fd-foreground: hsl(0, 0%, 92%);
+    --color-fd-muted: hsl(0, 0%, 12.9%);
+    --color-fd-muted-foreground: hsla(0, 0%, 70%, 0.8);
+    --color-fd-popover: hsl(0, 0%, 11.6%);
+    --color-fd-popover-foreground: hsl(0, 0%, 86.9%);
+    --color-fd-card: hsl(0, 0%, 9.8%);
+    --color-fd-card-foreground: hsl(0, 0%, 98%);
+    --color-fd-border: hsla(0, 0%, 40%, 20%);
+    --color-fd-primary: hsl(0, 0%, 98%);
+    --color-fd-primary-foreground: hsl(0, 0%, 9%);
+    --color-fd-secondary: hsl(0, 0%, 12.9%);
+    --color-fd-secondary-foreground: hsl(0, 0%, 92%);
+    --color-fd-accent: hsla(0, 0%, 40.9%, 30%);
+    --color-fd-accent-foreground: hsl(0, 0%, 90%);
+    --color-fd-ring: hsl(0, 0%, 54.9%);
+}
+
+#nd-page {
+    @apply py-10 px-14 border-r border-fd-border;
+    width: 100%;
+    max-width: none;
+}
+
+#nd-toc {
+    @apply pl-6;
+}

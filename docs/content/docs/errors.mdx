@@ -1,0 +1,59 @@
+---
+title: Errors and resilience
+description: Recognize API failures, retry safely and preserve valid prices.
+---
+
+`/v1` errors use JSON:API documents with an `errors` array and no `data`. HTTP status and `errors[].status` agree; the latter is a string. Branch on `code`, not the human-readable `detail`.
+
+```json title="Invalid query"
+{
+  "jsonapi": {"version": "1.1"},
+  "errors": [{
+    "status": "400",
+    "code": "invalid_query",
+    "detail": "Unsupported FuelWatch query."
+  }]
+}
+```
+
+All error responses use `Cache-Control: no-store`. A `HEAD` error has the same status with no body. Browser preflight failures and static asset responses can also be bodyless; do not assume every HTTP failure contains JSON.
+
+## Error catalogue
+
+| HTTP | Code | Meaning |
+| --- | --- | --- |
+| 400 | `invalid_query` | Unsupported, repeated or invalid query parameter. |
+| 404 | `not_found` | Path or image does not exist. |
+| 405 | `method_not_allowed` | Use GET, HEAD or supported OPTIONS preflight. |
+| 406 | `not_acceptable` | Accept does not permit JSON:API. |
+| 415 | `unsupported_media_type` | Unsupported JSON:API Content-Type parameters. |
+| 500 | `internal_error` | Unexpected server failure. |
+| 502 | `invalid_feed` | Source data failed validation or replaced published prices with an empty feed. |
+| 502 | `response_too_large` | Source selection exceeds bounded response limits. |
+| 502 | `upstream_denied` | Source refused the request. |
+| 503 | `upstream_unavailable` | Source temporarily unavailable or unreachable. |
+| 503 | `cache_refresh_busy` | Another invocation holds the snapshot fill lease; retry shortly. |
+| 504 | `upstream_timeout` | Source did not complete within the shared deadline. |
+
+## Retry guidance
+
+Fix `400`, `404`, `405`, `406` and `415` requests before retrying. For temporary `500`, `503` and `504` failures, wait for `Retry-After` if present, then use a limited retry count and jittered backoff. `cache_refresh_busy` includes `Retry-After: 2`.
+
+`502` means the Worker could not safely supply the source selection. Keep the last valid snapshot and retry conservatively; splitting a large selection can help `response_too_large`, while validation failures need the source to recover.
+
+The Worker already bounds upstream attempts and deadlines. Aggressive client loops add load without making publication or source recovery faster. The source fetch deadline is not a promised end-to-end latency SLA.
+
+## Empty is not an error
+
+A valid empty selection returns `200` with `data: []`. Inspect [publicationStatus](/docs/price-periods#tomorrows-publication) to distinguish an expected unpublished tomorrow feed from other empty results.
+
+Multi-product failures are atomic: if any required source component fails, the response fails instead of returning a partial success document. A station legitimately omitting one requested product is different and remains valid.
+
+## Limits and diagnostics
+
+There is no application API-key quota or documented per-client request limit in the Worker. This does not promise unlimited use; infrastructure can impose its own controls. Cache responses, honor conditional requests and report reproducible failures with the URL, HTTP status and non-sensitive response headers.
+
+Google's request budget belongs to background enrichment and is not a quota for public price requests. Missing provider data does not itself fail the price response.
+
+For the compatibility endpoint, the error shape is `{"error":{"code":"...","message":"..."}}`. See [legacy responses](/docs/api-reference/legacy).
+

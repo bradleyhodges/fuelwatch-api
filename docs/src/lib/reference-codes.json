@@ -1,0 +1,583 @@
+{
+    "brands": [
+        {
+            "code": 0,
+            "name": "Unknown",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 2,
+            "name": "Ampol",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 3,
+            "name": "Better Choice",
+            "logo": "/static/image/brand/better_choice.svg"
+        },
+        {
+            "code": 4,
+            "name": "BOC",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 5,
+            "name": "BP",
+            "logo": "/static/image/brand/bp.svg"
+        },
+        {
+            "code": 6,
+            "name": "Caltex",
+            "logo": "/static/image/brand/caltex.svg"
+        },
+        {
+            "code": 7,
+            "name": "Gull",
+            "logo": "/static/image/brand/gull.svg"
+        },
+        {
+            "code": 10,
+            "name": "Liberty",
+            "logo": "/static/image/brand/liberty.svg"
+        },
+        {
+            "code": 11,
+            "name": "Mobil",
+            "logo": "/static/image/brand/mobil.svg"
+        },
+        {
+            "code": 14,
+            "name": "Shell",
+            "logo": "/static/image/brand/shell.svg"
+        },
+        {
+            "code": 15,
+            "name": "Independent",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 23,
+            "name": "United",
+            "logo": "/static/image/brand/united.svg"
+        },
+        {
+            "code": 24,
+            "name": "Eagle",
+            "logo": "/static/image/brand/eagle_petroleum.svg"
+        },
+        {
+            "code": 25,
+            "name": "FastFuel 24/7",
+            "logo": "/static/image/brand/fastfuel.svg"
+        },
+        {
+            "code": 26,
+            "name": "Puma",
+            "logo": "/static/image/brand/puma.svg"
+        },
+        {
+            "code": 27,
+            "name": "Vibe",
+            "logo": "/static/image/brand/vibe.svg"
+        },
+        {
+            "code": 29,
+            "name": "7-Eleven",
+            "logo": "/static/image/brand/7_eleven.svg"
+        },
+        {
+            "code": 30,
+            "name": "Metro Petroleum",
+            "logo": "/static/image/brand/metro_petroleum.svg"
+        },
+        {
+            "code": 31,
+            "name": "WA Fuels",
+            "logo": "/static/image/brand/wa_fuel.svg"
+        },
+        {
+            "code": 32,
+            "name": "Costco",
+            "logo": "/static/image/brand/costco.svg"
+        },
+        {
+            "code": 34,
+            "name": "Atlas",
+            "logo": "/static/image/brand/atlas_fuel.svg"
+        },
+        {
+            "code": 35,
+            "name": "EG Ampol",
+            "logo": "/static/image/brand/eg_ampol.svg"
+        },
+        {
+            "code": 36,
+            "name": "CGL fuel",
+            "logo": "/static/image/brand/cambridge_gulf.svg"
+        },
+        {
+            "code": 37,
+            "name": "X Convenience",
+            "logo": "/static/image/brand/x_convenience.svg"
+        },
+        {
+            "code": 38,
+            "name": "Phoenix",
+            "logo": "/static/image/brand/phoenix.svg"
+        },
+        {
+            "code": 39,
+            "name": "Burk",
+            "logo": "/static/image/brand/burk.svg"
+        },
+        {
+            "code": 40,
+            "name": "Petro Fuels",
+            "logo": "/static/image/brand/petro_fuels.svg"
+        },
+        {
+            "code": 41,
+            "name": "Astron",
+            "logo": "/static/image/brand/astron.svg"
+        },
+        {
+            "code": 42,
+            "name": "OTR",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 43,
+            "name": "Reddy Express",
+            "logo": "/static/image/brand/shell_reddy_express.svg"
+        },
+        {
+            "code": 44,
+            "name": "Dunning's",
+            "logo": "/static/image/brand/dunnings.svg"
+        },
+        {
+            "code": 45,
+            "name": "Perrys",
+            "logo": "/static/image/brand/perrys.svg"
+        },
+        {
+            "code": 46,
+            "name": "UGO",
+            "logo": "/static/image/brand/ugo.svg"
+        },
+        {
+            "code": 47,
+            "name": "Maisey Fuels",
+            "logo": "/static/image/brand/maisey_fuels.svg"
+        },
+        {
+            "code": 48,
+            "name": "OMG Caltex",
+            "logo": "/static/image/brand/generic.svg"
+        },
+        {
+            "code": 49,
+            "name": "OMG Metro",
+            "logo": "/static/image/brand/omg_metro.svg"
+        },
+        {
+            "code": 50,
+            "name": "Solo",
+            "logo": "/static/image/brand/solo.svg"
+        },
+        {
+            "code": 52,
+            "name": "Broome Diesel",
+            "logo": "/static/image/brand/broome_diesel.svg"
+        },
+        {
+            "code": 53,
+            "name": "Fuel Tech",
+            "logo": "/static/image/brand/fuel_tech.svg"
+        }
+    ],
+    "siteFeatures": [
+        {
+            "code": 1,
+            "name": "Credit Cards"
+        },
+        {
+            "code": 2,
+            "name": "Debit Cards"
+        },
+        {
+            "code": 3,
+            "name": "Fuel Cards"
+        },
+        {
+            "code": 4,
+            "name": "ATM"
+        },
+        {
+            "code": 5,
+            "name": "Toilets"
+        },
+        {
+            "code": 6,
+            "name": "Bottled Gas"
+        },
+        {
+            "code": 7,
+            "name": "Trailer Hire"
+        },
+        {
+            "code": 8,
+            "name": "EFTPOS"
+        },
+        {
+            "code": 9,
+            "name": "Restaurant"
+        },
+        {
+            "code": 10,
+            "name": "Carwash"
+        },
+        {
+            "code": 11,
+            "name": "Workshop"
+        },
+        {
+            "code": 12,
+            "name": "Air"
+        },
+        {
+            "code": 13,
+            "name": "Water"
+        },
+        {
+            "code": 14,
+            "name": "Ice"
+        },
+        {
+            "code": 15,
+            "name": "Discount"
+        },
+        {
+            "code": 16,
+            "name": "Voucher"
+        },
+        {
+            "code": 17,
+            "name": "Bottled AdBlue"
+        },
+        {
+            "code": 18,
+            "name": "Pumped AdBlue"
+        },
+        {
+            "code": 19,
+            "name": "Truck Friendly"
+        },
+        {
+            "code": 20,
+            "name": "Convenience Store"
+        },
+        {
+            "code": 21,
+            "name": "Open 24 hours"
+        }
+    ],
+    "restrictions": [
+        {
+            "code": 1,
+            "name": "Unmanned site (credit card charges may apply)"
+        },
+        {
+            "code": 2,
+            "name": "Entry Permit Required"
+        },
+        {
+            "code": 3,
+            "name": "Membership Required"
+        },
+        {
+            "code": 4,
+            "name": "Low Aromatic Fuel"
+        }
+    ],
+    "products": [
+        {
+            "code": 1,
+            "name": "Unleaded Petrol"
+        },
+        {
+            "code": 2,
+            "name": "Premium Unleaded 95"
+        },
+        {
+            "code": 4,
+            "name": "Diesel"
+        },
+        {
+            "code": 5,
+            "name": "LPG"
+        },
+        {
+            "code": 6,
+            "name": "Premium Unleaded 98"
+        },
+        {
+            "code": 10,
+            "name": "E85"
+        },
+        {
+            "code": 11,
+            "name": "Brand Diesel"
+        }
+    ],
+    "regions": [
+        {
+            "code": 1,
+            "name": "Boulder"
+        },
+        {
+            "code": 2,
+            "name": "Broome"
+        },
+        {
+            "code": 3,
+            "name": "Busselton (Townsite)"
+        },
+        {
+            "code": 4,
+            "name": "Carnarvon"
+        },
+        {
+            "code": 5,
+            "name": "Collie"
+        },
+        {
+            "code": 6,
+            "name": "Dampier"
+        },
+        {
+            "code": 7,
+            "name": "Esperance"
+        },
+        {
+            "code": 8,
+            "name": "Kalgoorlie"
+        },
+        {
+            "code": 9,
+            "name": "Karratha"
+        },
+        {
+            "code": 10,
+            "name": "Kununurra"
+        },
+        {
+            "code": 11,
+            "name": "Narrogin"
+        },
+        {
+            "code": 12,
+            "name": "Northam"
+        },
+        {
+            "code": 13,
+            "name": "Port Hedland"
+        },
+        {
+            "code": 14,
+            "name": "South Hedland"
+        },
+        {
+            "code": 15,
+            "name": "Albany"
+        },
+        {
+            "code": 16,
+            "name": "Bunbury"
+        },
+        {
+            "code": 17,
+            "name": "Geraldton"
+        },
+        {
+            "code": 18,
+            "name": "Mandurah"
+        },
+        {
+            "code": 19,
+            "name": "Capel"
+        },
+        {
+            "code": 20,
+            "name": "Dardanup"
+        },
+        {
+            "code": 21,
+            "name": "Greenough"
+        },
+        {
+            "code": 22,
+            "name": "Harvey"
+        },
+        {
+            "code": 23,
+            "name": "Murray"
+        },
+        {
+            "code": 24,
+            "name": "Waroona"
+        },
+        {
+            "code": 25,
+            "name": "Metro North"
+        },
+        {
+            "code": 26,
+            "name": "Metro South"
+        },
+        {
+            "code": 27,
+            "name": "Metro East/Hills"
+        },
+        {
+            "code": 28,
+            "name": "Augusta / Margaret River"
+        },
+        {
+            "code": 29,
+            "name": "Busselton (Shire)"
+        },
+        {
+            "code": 30,
+            "name": "Bridgetown / Greenbushes"
+        },
+        {
+            "code": 31,
+            "name": "Donnybrook / Balingup"
+        },
+        {
+            "code": 32,
+            "name": "Manjimup"
+        },
+        {
+            "code": 33,
+            "name": "Cataby"
+        },
+        {
+            "code": 34,
+            "name": "Coolgardie"
+        },
+        {
+            "code": 35,
+            "name": "Cunderdin"
+        },
+        {
+            "code": 36,
+            "name": "Dalwallinu"
+        },
+        {
+            "code": 37,
+            "name": "Denmark"
+        },
+        {
+            "code": 38,
+            "name": "Derby"
+        },
+        {
+            "code": 39,
+            "name": "Dongara"
+        },
+        {
+            "code": 40,
+            "name": "Exmouth"
+        },
+        {
+            "code": 41,
+            "name": "Fitzroy Crossing"
+        },
+        {
+            "code": 42,
+            "name": "Jurien"
+        },
+        {
+            "code": 43,
+            "name": "Kambalda"
+        },
+        {
+            "code": 44,
+            "name": "Kellerberrin"
+        },
+        {
+            "code": 45,
+            "name": "Kojonup"
+        },
+        {
+            "code": 46,
+            "name": "Meekatharra"
+        },
+        {
+            "code": 47,
+            "name": "Moora"
+        },
+        {
+            "code": 48,
+            "name": "Mount Barker"
+        },
+        {
+            "code": 49,
+            "name": "Newman"
+        },
+        {
+            "code": 50,
+            "name": "Norseman"
+        },
+        {
+            "code": 51,
+            "name": "Ravensthorpe"
+        },
+        {
+            "code": 53,
+            "name": "Tammin"
+        },
+        {
+            "code": 54,
+            "name": "Williams"
+        },
+        {
+            "code": 55,
+            "name": "Wubin"
+        },
+        {
+            "code": 56,
+            "name": "York"
+        },
+        {
+            "code": 57,
+            "name": "Regans Ford"
+        },
+        {
+            "code": 58,
+            "name": "Meckering"
+        },
+        {
+            "code": 59,
+            "name": "Wundowie"
+        },
+        {
+            "code": 60,
+            "name": "North Bannister"
+        },
+        {
+            "code": 61,
+            "name": "Munglinup"
+        },
+        {
+            "code": 62,
+            "name": "Northam (Shire)"
+        },
+        {
+            "code": 63,
+            "name": "Bodallin"
+        }
+    ]
+}

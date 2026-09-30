@@ -1,0 +1,69 @@
+---
+title: Filtering
+description: Case-insensitive filters, comma-separated selections and bounded source queries.
+---
+
+## Filter syntax
+
+Use `filter[product]`, `filter[brand]`, `filter[region]`, `filter[suburb]`, `filter[day]` and `filter[surrounding]`. The short forms `product`, `brand`, `region`, `suburb`, `day` and `surrounding` select the same data.
+
+Names and text values are case-insensitive. `PRODUCT=1` and `filter[Product]=1` are equivalent. Pathnames and logo filenames remain case-sensitive. Numeric codes must be recognized decimal strings: `01` and `3` are not valid product IDs.
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `product` | `1,2,4,5,6,10,11`; any nonempty subset | All seven on `/v1`; `1` on `/legacy` |
+| `brand` | Comma-separated [brand codes](/docs/api-reference/codes#brands) | All brands |
+| `region` | Comma-separated [region codes](/docs/api-reference/codes#regions) | All regions |
+| `suburb` | Comma-separated names, at most 100 characters each after normalization | All suburbs |
+| `day` | `yesterday`, `today`, `tomorrow`, or `DD/MM/YYYY` within those three Perth dates | `today` |
+| `surrounding` | `yes` or `no` | Upstream behavior when filtering by suburb |
+
+Lists mean OR within a filter; different filters combine with AND. Spaces around values are trimmed, repeated list members removed, and suburb whitespace collapsed. Brand and region filters accept codes, not names. Response-only brand code `0` cannot be used as a filter.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Combine filters" method="GET" path="/v1">
+      Read two brands and three fuels. For exact suburb membership, explicitly include surrounding=no.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```bash title="Short aliases"
+curl 'https://fuelwatch.oss.bhodges.me/v1?brand=2,35&product=1,2,6'
+```
+
+```bash title="Filter family and exact suburbs"
+curl -g 'https://fuelwatch.oss.bhodges.me/v1?filter[product]=1&filter[suburb]=PERTH,WEST%20PERTH&filter[surrounding]=no'
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+`curl -g` disables curl's own square-bracket URL expansion. Construct query strings with your HTTP client's URL encoder; encoded brackets work too.
+
+## Validation
+
+Unknown names, duplicate parameters, empty list members, control characters, unknown codes and out-of-range dates return `400 invalid_query`. Do not combine `brand=5` with `filter[brand]=5`, or repeat a parameter under different casing. Duplicate list values such as `brand=5,5` are accepted.
+
+`day` and `surrounding` take one value each. The serialized query string is limited to 1,024 characters, including `expand` on `/v1`. No `limit`, `page`, `sort`, `fields`, `include`, radius, postcode or station-ID filter is implemented.
+
+## Which queries share source data?
+
+Unfiltered products, brand filters and exact-suburb queries reuse the shared per-product extracts. Changing these supported filters does not create another RSS selection while the extracts are fresh.
+
+Region membership and surrounding-suburb relationships are absent from RSS records. A region query, or a suburb query without `surrounding=no`, therefore uses source-side filtering. Omitting `surrounding` is not an exact-suburb search.
+
+Source-filtered queries expand to at most 24 combinations:
+
+```text
+selected products × selected brands × selected regions × selected suburbs
+```
+
+An omitted filter contributes one, except omitted `product` on `/v1` contributes seven. Duplicate list values count once. For example, seven fuels × four regions is 28 and is rejected; three fuels × four regions is 12 and fits.
+
+The limit also applies to every `/legacy` query. Local brand/exact-suburb filtering on `/v1` does not multiply origin combinations; it requires at most seven product extracts. All results still have input-size and quote-count bounds.
+
+## JSON:API compatibility
+
+Response documents and media negotiation follow [JSON:API 1.1](https://jsonapi.org/format/). Short lowercase aliases and `expand` are deliberate query-name extensions: JSON:API reserves lowercase top-level query names. Use `filter[...]` when a client requires the standard filter-family syntax, and account for the custom expansion control explicitly.
+

@@ -1,0 +1,55 @@
+---
+title: Dates and price periods
+description: Understand publication, calendar selection and effective prices in AWST.
+---
+
+All JSON timestamps use Australian Western Standard Time, UTC+08:00. Perth has no daylight-saving change in this API. A `sourceDate` is a date-only value; HTTP protocol dates, such as an HTTP-date received from upstream, retain their protocol format.
+
+## Calendar date and price period
+
+`day=today` selects the current Perth calendar date. That date's price period begins at 06:00 AWST and ends at 06:00 the following day, with an exclusive end.
+
+For `sourceDate=2026-09-29`:
+
+```json
+{
+  "validFrom": "2026-09-29T06:00:00.000+08:00",
+  "validUntil": "2026-09-30T06:00:00.000+08:00"
+}
+```
+
+`price.asAt` equals `meta.validFrom`. It identifies the effective start, not when the Worker fetched the quote.
+
+| Local request time | Calendar selection | Selection for currently effective prices |
+| --- | --- | --- |
+| 00:00–05:59:59 | `today` is the new date | `yesterday` |
+| 06:00–23:59:59 | `today` is the current date | `today` |
+
+An absolute `DD/MM/YYYY` is accepted only if it represents yesterday, today or tomorrow in Perth at request time. This is not a historical archive API. An accepted yesterday query can still refer to an expired price period; such responses are served with `no-store`.
+
+## Tomorrow's publication
+
+The Worker uses 14:30 AWST as its expected tomorrow-publication boundary. This is a retry/cache rule, not a guarantee that upstream has published every station by that instant.
+
+| `publicationStatus` | Meaning |
+| --- | --- |
+| `available` | The requested selection contains at least one station quote. |
+| `not_yet_published` | An empty tomorrow selection before 14:30 AWST. |
+| `empty` | A valid empty result in other circumstances, including filters with no matches. |
+
+A nonempty future selection is `available` even though its prices are not effective yet. A status of `available` does not mean every requested product exists at every station, or that the whole source catalogue has been published.
+
+Empty and unpublished results are cached for at most 30 seconds, bounded by validity and publication transitions. If a multi-product selection is missing one product's data, the combined response also receives a short retry lifetime.
+
+## Provenance
+
+`meta.fetchedAt` is the oldest contributing origin fetch. Cache reads never renew it. The `X-FuelWatch-Fetched-At` header repeats it. Per-station `enrichment.fetchedAt` is independent: facility/contact data can be much older than the fuel-price snapshot.
+
+Use `validFrom <= now < validUntil` for current validity and track fetch age separately. Never substitute the client download time for the source timestamp.
+
+## Hourly refresh
+
+Unfiltered product snapshots refresh at minute zero every hour. Before 06:00 AWST the job warms yesterday and today; from 06:00 to 14:29 it warms today; from 14:30 onward it warms today and tomorrow. Because it runs hourly, the first scheduled tomorrow refresh after that boundary is normally 15:00. On-demand requests can populate tomorrow earlier.
+
+A failed refresh preserves previously valid cached prices until their original expiry. This does not guarantee continuous availability or extend an expired quote.
+

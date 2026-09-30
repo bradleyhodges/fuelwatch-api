@@ -1,0 +1,2636 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "FuelWatch API",
+    "version": "1.0.0",
+    "description": "Independent, read-only API maintained by Bradley Hodges. Fuel prices originate from fuelwatch.wa.gov.au. This document describes the Worker source contract, not a guarantee that a deployment already runs that source. All JSON timestamps use AWST (+08:00); HTTP dates retain protocol formatting.",
+    "contact": {
+      "name": "FuelWatch API issues",
+      "url": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://fuelwatch.oss.bhodges.me",
+      "description": "Production API"
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Prices",
+      "description": "Grouped station prices and public CORS."
+    },
+    {
+      "name": "Compatibility",
+      "description": "Root redirect and RSS-shaped JSON."
+    },
+    {
+      "name": "Images",
+      "description": "Brand artwork."
+    }
+  ],
+  "paths": {
+    "/v1": {
+      "get": {
+        "operationId": "getServiceStations",
+        "tags": [
+          "Prices"
+        ],
+        "summary": "Read station prices",
+        "description": "Public read-only JSON:API 1.1 collection. No pagination, sort, include, fields or authentication. Default all products. Short aliases and expand are intentional JSON:API query-name extensions. Total URLSearchParams serialization must be at most 1024 characters. Source-filtered selections expand to at most 24 combinations; see filtering guide for the conditional rule.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/productAlias"
+          },
+          {
+            "$ref": "#/components/parameters/brand"
+          },
+          {
+            "$ref": "#/components/parameters/brandAlias"
+          },
+          {
+            "$ref": "#/components/parameters/region"
+          },
+          {
+            "$ref": "#/components/parameters/regionAlias"
+          },
+          {
+            "$ref": "#/components/parameters/suburb"
+          },
+          {
+            "$ref": "#/components/parameters/suburbAlias"
+          },
+          {
+            "$ref": "#/components/parameters/day"
+          },
+          {
+            "$ref": "#/components/parameters/dayAlias"
+          },
+          {
+            "$ref": "#/components/parameters/surrounding"
+          },
+          {
+            "$ref": "#/components/parameters/surroundingAlias"
+          },
+          {
+            "$ref": "#/components/parameters/expand"
+          },
+          {
+            "$ref": "#/components/parameters/validator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "304": {
+            "$ref": "#/components/responses/NotModified"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "405": {
+            "$ref": "#/components/responses/Error405"
+          },
+          "406": {
+            "$ref": "#/components/responses/Error406"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      },
+      "head": {
+        "operationId": "headServiceStations",
+        "tags": [
+          "Prices"
+        ],
+        "summary": "Read price response headers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/productAlias"
+          },
+          {
+            "$ref": "#/components/parameters/brand"
+          },
+          {
+            "$ref": "#/components/parameters/brandAlias"
+          },
+          {
+            "$ref": "#/components/parameters/region"
+          },
+          {
+            "$ref": "#/components/parameters/regionAlias"
+          },
+          {
+            "$ref": "#/components/parameters/suburb"
+          },
+          {
+            "$ref": "#/components/parameters/suburbAlias"
+          },
+          {
+            "$ref": "#/components/parameters/day"
+          },
+          {
+            "$ref": "#/components/parameters/dayAlias"
+          },
+          {
+            "$ref": "#/components/parameters/surrounding"
+          },
+          {
+            "$ref": "#/components/parameters/surroundingAlias"
+          },
+          {
+            "$ref": "#/components/parameters/expand"
+          },
+          {
+            "$ref": "#/components/parameters/validator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-FuelWatch-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Cache"
+              },
+              "X-FuelWatch-Snapshot-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+              },
+              "X-FuelWatch-Source-Date": {
+                "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+              },
+              "X-FuelWatch-Fetched-At": {
+                "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/Access-Control-Allow-Origin"
+              }
+            }
+          },
+          "304": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-FuelWatch-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Cache"
+              },
+              "X-FuelWatch-Snapshot-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+              },
+              "X-FuelWatch-Source-Date": {
+                "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+              },
+              "X-FuelWatch-Fetched-At": {
+                "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/Access-Control-Allow-Origin"
+              }
+            }
+          },
+          "400": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "Allow": {
+                "schema": {
+                  "type": "string",
+                  "const": "GET, HEAD, OPTIONS"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Seconds to wait, when supplied; cache_refresh_busy uses 2."
+              }
+            }
+          },
+          "504": {
+            "description": "Same status and headers as GET; no response body.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "summary": "Browser CORS preflight",
+        "responses": {
+          "204": {
+            "description": "Public preflight; requested headers echoed and Access-Control-Max-Age 86400. No body.",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "const": "*"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string",
+                  "const": "GET, HEAD, OPTIONS"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Requested method is unsupported. No body."
+          }
+        },
+        "operationId": "optionsServiceStations",
+        "tags": [
+          "Prices"
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "operationId": "redirectToPrices",
+        "tags": [
+          "Compatibility"
+        ],
+        "summary": "Redirect to /v1",
+        "responses": {
+          "302": {
+            "description": "Preserves the query string; no validation before redirect.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "operationId": "headPriceRedirect",
+        "tags": [
+          "Compatibility"
+        ],
+        "summary": "Redirect without a body",
+        "responses": {
+          "302": {
+            "description": "Same redirect as GET; no body.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "summary": "Browser CORS preflight",
+        "responses": {
+          "204": {
+            "description": "Public preflight; requested headers echoed and Access-Control-Max-Age 86400. No body.",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "const": "*"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string",
+                  "const": "GET, HEAD, OPTIONS"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Requested method is unsupported. No body."
+          }
+        },
+        "operationId": "optionsPriceRedirect",
+        "tags": [
+          "Compatibility"
+        ]
+      }
+    },
+    "/legacy": {
+      "get": {
+        "operationId": "getLegacyFeed",
+        "tags": [
+          "Compatibility"
+        ],
+        "summary": "Read RSS-shaped JSON",
+        "description": "Compatibility endpoint. Defaults to product 1; accepts the same six filters and aliases, but rejects expand. All selections use the 24-combination bound. String brands/features, separate per-product items, E.164 phone and optional product marker for multi-product requests. No JSON:API metadata or Google enrichment.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/productAlias"
+          },
+          {
+            "$ref": "#/components/parameters/brand"
+          },
+          {
+            "$ref": "#/components/parameters/brandAlias"
+          },
+          {
+            "$ref": "#/components/parameters/region"
+          },
+          {
+            "$ref": "#/components/parameters/regionAlias"
+          },
+          {
+            "$ref": "#/components/parameters/suburb"
+          },
+          {
+            "$ref": "#/components/parameters/suburbAlias"
+          },
+          {
+            "$ref": "#/components/parameters/day"
+          },
+          {
+            "$ref": "#/components/parameters/dayAlias"
+          },
+          {
+            "$ref": "#/components/parameters/surrounding"
+          },
+          {
+            "$ref": "#/components/parameters/surroundingAlias"
+          },
+          {
+            "$ref": "#/components/parameters/validator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Legacy RSS-shaped JSON.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-FuelWatch-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Cache"
+              },
+              "X-FuelWatch-Snapshot-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+              },
+              "X-FuelWatch-Source-Date": {
+                "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+              },
+              "X-FuelWatch-Fetched-At": {
+                "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/Access-Control-Allow-Origin"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged legacy representation; no body."
+          },
+          "default": {
+            "description": "Legacy error; status is one of 400, 404, 405, 500, 502, 503 or 504.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "operationId": "headLegacyFeed",
+        "tags": [
+          "Compatibility"
+        ],
+        "summary": "Read legacy headers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/productAlias"
+          },
+          {
+            "$ref": "#/components/parameters/brand"
+          },
+          {
+            "$ref": "#/components/parameters/brandAlias"
+          },
+          {
+            "$ref": "#/components/parameters/region"
+          },
+          {
+            "$ref": "#/components/parameters/regionAlias"
+          },
+          {
+            "$ref": "#/components/parameters/suburb"
+          },
+          {
+            "$ref": "#/components/parameters/suburbAlias"
+          },
+          {
+            "$ref": "#/components/parameters/day"
+          },
+          {
+            "$ref": "#/components/parameters/dayAlias"
+          },
+          {
+            "$ref": "#/components/parameters/surrounding"
+          },
+          {
+            "$ref": "#/components/parameters/surroundingAlias"
+          },
+          {
+            "$ref": "#/components/parameters/validator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Same headers as legacy GET; no body.",
+            "headers": {
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "X-FuelWatch-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Cache"
+              },
+              "X-FuelWatch-Snapshot-Cache": {
+                "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+              },
+              "X-FuelWatch-Source-Date": {
+                "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+              },
+              "X-FuelWatch-Fetched-At": {
+                "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/Access-Control-Allow-Origin"
+              }
+            }
+          },
+          "304": {
+            "description": "No body."
+          },
+          "default": {
+            "description": "Same error status as GET; no body."
+          }
+        }
+      },
+      "options": {
+        "summary": "Browser CORS preflight",
+        "responses": {
+          "204": {
+            "description": "Public preflight; requested headers echoed and Access-Control-Max-Age 86400. No body.",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "const": "*"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string",
+                  "const": "GET, HEAD, OPTIONS"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Requested method is unsupported. No body."
+          }
+        },
+        "operationId": "optionsLegacyFeed",
+        "tags": [
+          "Compatibility"
+        ]
+      }
+    },
+    "/static/image/brand/{filename}": {
+      "parameters": [
+        {
+          "name": "filename",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+\\.svg$"
+          },
+          "example": "bp.svg",
+          "description": "Exact filename advertised by an expanded brand; case-sensitive."
+        }
+      ],
+      "get": {
+        "operationId": "getBrandLogo",
+        "tags": [
+          "Images"
+        ],
+        "summary": "Read a supplied SVG logo",
+        "responses": {
+          "200": {
+            "description": "Public SVG. Existing assets are served before the Worker, without price/Google requests.",
+            "headers": {
+              "ETag": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Opaque quoted validator for the complete representation. Send unchanged in If-None-Match."
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "public, max-age=86400"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "const": "*"
+                }
+              }
+            },
+            "content": {
+              "image/svg+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged image; no body."
+          },
+          "404": {
+            "description": "Unknown logo."
+          },
+          "405": {
+            "description": "Static assets support GET/HEAD. Existing images do not support OPTIONS."
+          }
+        }
+      },
+      "head": {
+        "operationId": "headBrandLogo",
+        "tags": [
+          "Images"
+        ],
+        "summary": "Read logo headers",
+        "responses": {
+          "200": {
+            "description": "Same headers as image GET; no body."
+          },
+          "304": {
+            "description": "No body."
+          },
+          "404": {
+            "description": "Unknown logo; no body."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductCode": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          10,
+          11
+        ],
+        "description": "FuelWatch product identifier. There is no product 3."
+      },
+      "BrandCode": {
+        "type": "integer",
+        "enum": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15,
+          23,
+          24,
+          25,
+          26,
+          27,
+          29,
+          30,
+          31,
+          32,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          52,
+          53
+        ],
+        "description": "FuelWatch brand code. Reserved response-only code 0 means unmapped; sourceNotes.brand retains its name."
+      },
+      "FeatureCode": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "description": "Stable API feature identifier; not an array position."
+      },
+      "RestrictionCode": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "description": "Stable API restriction identifier."
+      },
+      "Brand": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              0,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              10,
+              11,
+              14,
+              15,
+              23,
+              24,
+              25,
+              26,
+              27,
+              29,
+              30,
+              31,
+              32,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              52,
+              53
+            ],
+            "description": "Stable reference code."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable label."
+          },
+          "logo": {
+            "type": "string",
+            "description": "Root-relative SVG URL; resolve against the API origin.",
+            "pattern": "^/static/image/brand/[a-z0-9_]+\\.svg$",
+            "examples": [
+              "/static/image/brand/bp.svg"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "logo"
+        ]
+      },
+      "SiteFeature": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ],
+            "description": "Stable reference code."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable label."
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "Restriction": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "description": "Stable reference code."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable label."
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "description": "FuelWatch street address."
+          },
+          "suburb": {
+            "type": "string",
+            "description": "FuelWatch suburb/locality."
+          },
+          "state": {
+            "const": "WA",
+            "type": "string"
+          },
+          "postcode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}$",
+            "description": "Australian postcode, preserving leading zeroes; null when unavailable."
+          }
+        },
+        "required": [
+          "street",
+          "suburb",
+          "state",
+          "postcode"
+        ]
+      },
+      "Price": {
+        "type": "object",
+        "properties": {
+          "asAt": {
+            "type": "string",
+            "description": "Start of the selected price period at 06:00 AWST; equals meta.validFrom.",
+            "format": "date-time",
+            "pattern": "\\+08:00$",
+            "examples": [
+              "2026-09-29T06:00:00.000+08:00"
+            ]
+          },
+          "products": {
+            "type": "object",
+            "properties": {
+              "1": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "Unleaded Petrol in Australian cents per litre."
+              },
+              "2": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "Premium Unleaded 95 in Australian cents per litre."
+              },
+              "4": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "Diesel in Australian cents per litre."
+              },
+              "5": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "LPG in Australian cents per litre."
+              },
+              "6": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "Premium Unleaded 98 in Australian cents per litre."
+              },
+              "10": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "E85 in Australian cents per litre."
+              },
+              "11": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "description": "Brand Diesel in Australian cents per litre."
+              }
+            },
+            "required": [],
+            "minProperties": 1,
+            "additionalProperties": false,
+            "description": "Selected product IDs as JSON string keys. Missing products are unavailable, never zero. 195.1 cents/L means AUD 1.951/L."
+          }
+        },
+        "required": [
+          "asAt",
+          "products"
+        ]
+      },
+      "OpeningHours": {
+        "type": "object",
+        "description": "Optional local AWST weekday schedule. Missing weekdays are unknown. End before start means next day; 24:00 is allowed only as a closing time.",
+        "properties": {
+          "Monday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Tuesday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Wednesday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Thursday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Friday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Saturday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          },
+          "Sunday": {
+            "type": "string",
+            "description": "Closed, or one or more comma-separated HH:mm-HH:mm intervals.",
+            "pattern": "^(Closed|([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00)(,([01]\\d|2[0-3]):[0-5]\\d-(([01]\\d|2[0-3]):[0-5]\\d|24:00))*)$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SourceNotes": {
+        "type": "object",
+        "description": "Optional original text that could not be represented by the controlled schema.",
+        "properties": {
+          "brand": {
+            "type": "string",
+            "description": "Unmapped source brand, paired with code 0."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Unclassified source feature text."
+            }
+          },
+          "restrictions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Unclassified source restriction text."
+            }
+          },
+          "openHours": {
+            "type": "string",
+            "description": "Unparsed source hours; blocks provider replacement."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Invalid or ambiguous source phone; blocks provider replacement."
+          }
+        },
+        "required": []
+      },
+      "Attribution": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Third-party provider display name."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Attribution URL.",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "displayName",
+          "uri"
+        ]
+      },
+      "Enrichment": {
+        "type": "object",
+        "description": "Present only when provider fields were used. Preserve attribution when displaying them.",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "const": "Google Maps"
+          },
+          "placeId": {
+            "type": "string",
+            "description": "Matched Google place identifier."
+          },
+          "fetchedAt": {
+            "type": "string",
+            "description": "AWST timestamp with explicit +08:00 offset.",
+            "format": "date-time",
+            "pattern": "\\+08:00$",
+            "examples": [
+              "2026-09-29T16:00:00.000+08:00"
+            ]
+          },
+          "stale": {
+            "type": "boolean",
+            "description": "Provider refresh deadline has passed; data is still within its 30-day retention limit."
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Field contributed by Google, such as phone, address.postcode or openHours.Monday."
+            }
+          },
+          "googleMapsUri": {
+            "type": "string",
+            "description": "Google Maps URL for the matched place.",
+            "format": "uri"
+          },
+          "attributions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attribution"
+            }
+          }
+        },
+        "required": [
+          "provider",
+          "placeId",
+          "fetchedAt",
+          "stale",
+          "fields",
+          "googleMapsUri",
+          "attributions"
+        ]
+      },
+      "StationAttributes": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "FuelWatch station name."
+          },
+          "tradingName": {
+            "type": "string",
+            "description": "FuelWatch trading name."
+          },
+          "brand": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BrandCode"
+              },
+              {
+                "$ref": "#/components/schemas/Brand"
+              }
+            ],
+            "description": "Numeric by default; object when brand is expanded."
+          },
+          "price": {
+            "$ref": "#/components/schemas/Price"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "is24Hours": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "true: known continuous opening; false: known limited schedule; null: unknown."
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\+[1-9]\\d{1,14}$",
+            "description": "Valid E.164 phone number, or null."
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "siteFeatures": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureCode"
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SiteFeature"
+                },
+                "minItems": 1
+              }
+            ],
+            "description": "Codes by default, objects when expanded. Empty is []; each nonempty array uses one representation."
+          },
+          "restrictions": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RestrictionCode"
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Restriction"
+                },
+                "minItems": 1
+              }
+            ],
+            "description": "Codes or expanded objects; null when there are no known restrictions."
+          },
+          "openHours": {
+            "$ref": "#/components/schemas/OpeningHours"
+          },
+          "sourceNotes": {
+            "$ref": "#/components/schemas/SourceNotes"
+          },
+          "enrichment": {
+            "$ref": "#/components/schemas/Enrichment"
+          }
+        },
+        "required": [
+          "name",
+          "tradingName",
+          "brand",
+          "price",
+          "address",
+          "is24Hours",
+          "phone",
+          "latitude",
+          "longitude",
+          "siteFeatures",
+          "restrictions"
+        ]
+      },
+      "ServiceStation": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "serviceStation"
+          },
+          "id": {
+            "type": "string",
+            "description": "Opaque identity for one station and source date. Stable across selected products, expansion, prices and enrichment, but changes with source date or station identity.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}:[a-f0-9]{64}$"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/StationAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "attributes"
+        ]
+      },
+      "Metadata": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "const": "fuelwatch.wa.gov.au"
+          },
+          "sourceDate": {
+            "type": "string",
+            "description": "Selected Perth calendar date.",
+            "format": "date"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "description": "Oldest contributing origin fetch; never reset by cache reads.",
+            "format": "date-time",
+            "pattern": "\\+08:00$",
+            "examples": [
+              "2026-09-29T16:00:00.000+08:00"
+            ]
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "AWST timestamp with explicit +08:00 offset.",
+            "format": "date-time",
+            "pattern": "\\+08:00$",
+            "examples": [
+              "2026-09-29T06:00:00.000+08:00"
+            ]
+          },
+          "validUntil": {
+            "type": "string",
+            "description": "Exclusive end of the price period at 06:00 the next day.",
+            "format": "date-time",
+            "pattern": "\\+08:00$",
+            "examples": [
+              "2026-09-30T06:00:00.000+08:00"
+            ]
+          },
+          "publicationStatus": {
+            "type": "string",
+            "enum": [
+              "available",
+              "empty",
+              "not_yet_published"
+            ],
+            "description": "Nonempty, valid empty, or empty tomorrow selection before 14:30 AWST. Not a separate availability endpoint."
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductCode"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCode"
+            },
+            "minItems": 2,
+            "uniqueItems": true
+          },
+          "copyright": {
+            "type": "string",
+            "description": "Publisher and API copyright notice."
+          },
+          "documentation": {
+            "type": "string",
+            "description": "Documentation URL.",
+            "format": "uri"
+          },
+          "issues": {
+            "type": "string",
+            "description": "Issue tracker URL.",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "source",
+          "sourceDate",
+          "fetchedAt",
+          "validFrom",
+          "validUntil",
+          "publicationStatus",
+          "copyright",
+          "documentation",
+          "issues"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "product"
+            ],
+            "not": {
+              "required": [
+                "products"
+              ]
+            }
+          },
+          {
+            "required": [
+              "products"
+            ],
+            "not": {
+              "required": [
+                "product"
+              ]
+            }
+          }
+        ]
+      },
+      "JsonApi": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "const": "1.1"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "PriceDocument": {
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/JsonApi"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceStation"
+            }
+          }
+        },
+        "required": [
+          "jsonapi",
+          "meta",
+          "data"
+        ]
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "400",
+              "404",
+              "405",
+              "406",
+              "415",
+              "500",
+              "502",
+              "503",
+              "504"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "invalid_query",
+              "not_found",
+              "method_not_allowed",
+              "not_acceptable",
+              "unsupported_media_type",
+              "internal_error",
+              "invalid_feed",
+              "response_too_large",
+              "upstream_denied",
+              "upstream_unavailable",
+              "cache_refresh_busy",
+              "upstream_timeout"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "description": "Safe diagnostic message; do not branch on its wording."
+          }
+        },
+        "required": [
+          "status",
+          "code",
+          "detail"
+        ]
+      },
+      "ErrorDocument": {
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/JsonApi"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiError"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "jsonapi",
+          "errors"
+        ],
+        "not": {
+          "required": [
+            "data"
+          ]
+        }
+      },
+      "LegacyItem": {
+        "type": "object",
+        "description": "Validated RSS-shaped station quote. Source/parser members are preserved; quotes are not grouped by station.",
+        "properties": {
+          "trading-name": {
+            "type": "string",
+            "description": "Source trading name."
+          },
+          "brand": {
+            "type": "string",
+            "description": "Source brand label."
+          },
+          "price": {
+            "type": "string",
+            "description": "Price in cents/L, as source text."
+          },
+          "date": {
+            "type": "string",
+            "description": "Source price date.",
+            "format": "date"
+          },
+          "address": {
+            "type": "string",
+            "description": "Street address."
+          },
+          "location": {
+            "type": "string",
+            "description": "Suburb."
+          },
+          "latitude": {
+            "type": "string",
+            "description": "Latitude as source text."
+          },
+          "longitude": {
+            "type": "string",
+            "description": "Longitude as source text."
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Normalized E.164 phone or null."
+          },
+          "site-features": {
+            "type": "string",
+            "description": "Source feature/hours text."
+          },
+          "restrictions": {
+            "type": "string",
+            "description": "Source restrictions text."
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductCode",
+            "description": "Included only for multi-product selections."
+          }
+        },
+        "required": [
+          "price",
+          "date",
+          "trading-name",
+          "address",
+          "location",
+          "latitude",
+          "longitude",
+          "phone"
+        ]
+      },
+      "LegacyDocument": {
+        "type": "object",
+        "properties": {
+          "feed": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LegacyItem"
+                }
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "description": "RSS channel/parser metadata and validated items. Not a JSON:API document."
+          }
+        },
+        "required": [
+          "feed"
+        ]
+      },
+      "LegacyError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "invalid_query",
+                  "not_found",
+                  "method_not_allowed",
+                  "not_acceptable",
+                  "unsupported_media_type",
+                  "internal_error",
+                  "invalid_feed",
+                  "response_too_large",
+                  "upstream_denied",
+                  "upstream_unavailable",
+                  "cache_refresh_busy",
+                  "upstream_timeout"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "description": "Safe diagnostic message."
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    },
+    "parameters": {
+      "product": {
+        "name": "filter[product]",
+        "in": "query",
+        "required": false,
+        "description": "Selected fuels. Default: all seven on /v1, product 1 on /legacy. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ProductCode"
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "productAlias": {
+        "name": "product",
+        "in": "query",
+        "required": false,
+        "description": "Selected fuels. Default: all seven on /v1, product 1 on /legacy. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ProductCode"
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "brand": {
+        "name": "filter[brand]",
+        "in": "query",
+        "required": false,
+        "description": "Brand codes, not names. Code 0 is response-only. Omitted means all brands. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "enum": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              10,
+              11,
+              14,
+              15,
+              23,
+              24,
+              25,
+              26,
+              27,
+              29,
+              30,
+              31,
+              32,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              52,
+              53
+            ]
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "brandAlias": {
+        "name": "brand",
+        "in": "query",
+        "required": false,
+        "description": "Brand codes, not names. Code 0 is response-only. Omitted means all brands. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "enum": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              10,
+              11,
+              14,
+              15,
+              23,
+              24,
+              25,
+              26,
+              27,
+              29,
+              30,
+              31,
+              32,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              52,
+              53
+            ]
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "region": {
+        "name": "filter[region]",
+        "in": "query",
+        "required": false,
+        "description": "Region codes; selection is evaluated at the source. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63
+            ]
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "regionAlias": {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "Region codes; selection is evaluated at the source. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63
+            ]
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "suburb": {
+        "name": "filter[suburb]",
+        "in": "query",
+        "required": false,
+        "description": "Suburb names; trims and collapses whitespace. Use surrounding=no for exact matching. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "suburbAlias": {
+        "name": "suburb",
+        "in": "query",
+        "required": false,
+        "description": "Suburb names; trims and collapses whitespace. Use surrounding=no for exact matching. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "minItems": 1
+        },
+        "style": "form",
+        "explode": false
+      },
+      "day": {
+        "name": "filter[day]",
+        "in": "query",
+        "required": false,
+        "description": "Perth yesterday, today or tomorrow; DD/MM/YYYY must resolve to one of those same three dates. Calendar selection changes at midnight; price validity starts at 06:00. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "string",
+          "default": "today",
+          "pattern": "^([Tt][Oo][Dd][Aa][Yy]|[Tt][Oo][Mm][Oo][Rr][Rr][Oo][Ww]|[Yy][Ee][Ss][Tt][Ee][Rr][Dd][Aa][Yy]|\\d{2}/\\d{2}/\\d{4})$"
+        }
+      },
+      "dayAlias": {
+        "name": "day",
+        "in": "query",
+        "required": false,
+        "description": "Perth yesterday, today or tomorrow; DD/MM/YYYY must resolve to one of those same three dates. Calendar selection changes at midnight; price validity starts at 06:00. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "string",
+          "default": "today",
+          "pattern": "^([Tt][Oo][Dd][Aa][Yy]|[Tt][Oo][Mm][Oo][Rr][Rr][Oo][Ww]|[Yy][Ee][Ss][Tt][Ee][Rr][Dd][Aa][Yy]|\\d{2}/\\d{2}/\\d{4})$"
+        }
+      },
+      "surrounding": {
+        "name": "filter[surrounding]",
+        "in": "query",
+        "required": false,
+        "description": "yes or no. With a suburb, omission keeps upstream surrounding behavior. Without a suburb, does not restrict stations. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "string",
+          "pattern": "^([Yy][Ee][Ss]|[Nn][Oo])$"
+        }
+      },
+      "surroundingAlias": {
+        "name": "surrounding",
+        "in": "query",
+        "required": false,
+        "description": "yes or no. With a suburb, omission keeps upstream surrounding behavior. Without a suburb, does not restrict stations. Names and text values are case-insensitive. Do not repeat this parameter or combine its two spellings.",
+        "schema": {
+          "type": "string",
+          "pattern": "^([Yy][Ee][Ss]|[Nn][Oo])$"
+        }
+      },
+      "expand": {
+        "name": "expand",
+        "in": "query",
+        "required": false,
+        "style": "form",
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "description": "Case-insensitive comma-separated brand, siteFeatures, restrictions, or all. Omitted means numeric codes. Trim and deduplicate members; all plus valid members is allowed. Unknown/empty members and repeated parameters return 400. This representation control never reaches RSS or D1 keys.",
+        "example": [
+          "brand",
+          "siteFeatures"
+        ]
+      },
+      "validator": {
+        "name": "If-None-Match",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ETag from the same URL/representation. Supports a list, weak prefix or *. A match returns a bodyless 304."
+      }
+    },
+    "responses": {
+      "Success": {
+        "description": "Validated collection, including a valid empty data array.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          },
+          "Cache-Control": {
+            "$ref": "#/components/headers/Cache-Control"
+          },
+          "X-FuelWatch-Cache": {
+            "$ref": "#/components/headers/X-FuelWatch-Cache"
+          },
+          "X-FuelWatch-Snapshot-Cache": {
+            "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+          },
+          "X-FuelWatch-Source-Date": {
+            "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+          },
+          "X-FuelWatch-Fetched-At": {
+            "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+          },
+          "Vary": {
+            "$ref": "#/components/headers/Vary"
+          },
+          "Access-Control-Allow-Origin": {
+            "$ref": "#/components/headers/Access-Control-Allow-Origin"
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/PriceDocument"
+            },
+            "examples": {
+              "Compact": {
+                "$ref": "#/components/examples/Compact"
+              },
+              "Expanded": {
+                "$ref": "#/components/examples/Expanded"
+              },
+              "Empty": {
+                "$ref": "#/components/examples/Empty"
+              },
+              "SingleProduct": {
+                "$ref": "#/components/examples/SingleProduct"
+              }
+            }
+          }
+        }
+      },
+      "NotModified": {
+        "description": "Representation matches If-None-Match. No body; retain the previously stored document and fetch time.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          },
+          "Cache-Control": {
+            "$ref": "#/components/headers/Cache-Control"
+          },
+          "X-FuelWatch-Cache": {
+            "$ref": "#/components/headers/X-FuelWatch-Cache"
+          },
+          "X-FuelWatch-Snapshot-Cache": {
+            "$ref": "#/components/headers/X-FuelWatch-Snapshot-Cache"
+          },
+          "X-FuelWatch-Source-Date": {
+            "$ref": "#/components/headers/X-FuelWatch-Source-Date"
+          },
+          "X-FuelWatch-Fetched-At": {
+            "$ref": "#/components/headers/X-FuelWatch-Fetched-At"
+          },
+          "Vary": {
+            "$ref": "#/components/headers/Vary"
+          },
+          "Access-Control-Allow-Origin": {
+            "$ref": "#/components/headers/Access-Control-Allow-Origin"
+          }
+        }
+      },
+      "Error400": {
+        "description": "invalid_query: Unsupported, repeated or invalid query parameter.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error404": {
+        "description": "not_found: Path or image does not exist.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error405": {
+        "description": "method_not_allowed: Use GET, HEAD or supported OPTIONS preflight.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          },
+          "Allow": {
+            "schema": {
+              "type": "string",
+              "const": "GET, HEAD, OPTIONS"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error406": {
+        "description": "not_acceptable: Accept does not permit JSON:API.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error415": {
+        "description": "unsupported_media_type: Unsupported JSON:API Content-Type parameters.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error500": {
+        "description": "internal_error: Unexpected server failure.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error502": {
+        "description": "invalid_feed: Source data failed validation or replaced published prices with an empty feed. response_too_large: Source selection exceeds bounded response limits. upstream_denied: Source refused the request.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error503": {
+        "description": "upstream_unavailable: Source temporarily unavailable or unreachable. cache_refresh_busy: Another invocation holds the snapshot fill lease; retry shortly.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          },
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Seconds to wait, when supplied; cache_refresh_busy uses 2."
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      },
+      "Error504": {
+        "description": "upstream_timeout: Source did not complete within the shared deadline.",
+        "headers": {
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDocument"
+            }
+          }
+        }
+      }
+    },
+    "headers": {
+      "ETag": {
+        "schema": {
+          "type": "string"
+        },
+        "description": "Opaque quoted validator for the complete representation. Send unchanged in If-None-Match."
+      },
+      "Cache-Control": {
+        "schema": {
+          "type": "string"
+        },
+        "description": "public, max-age=0, s-maxage=<remaining seconds>, or no-store. Never assume six hours remains."
+      },
+      "X-FuelWatch-Cache": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HIT",
+            "MISS"
+          ]
+        },
+        "description": "Rendered edge response cache status for this request."
+      },
+      "X-FuelWatch-Snapshot-Cache": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HIT",
+            "MISS",
+            "BYPASS"
+          ]
+        },
+        "description": "D1 snapshot status when the representation was built; retained unchanged on an edge hit."
+      },
+      "X-FuelWatch-Source-Date": {
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "X-FuelWatch-Fetched-At": {
+        "schema": {
+          "type": "string",
+          "description": "AWST timestamp with explicit +08:00 offset.",
+          "format": "date-time",
+          "pattern": "\\+08:00$",
+          "examples": [
+            "2026-09-29T16:00:00.000+08:00"
+          ]
+        }
+      },
+      "Vary": {
+        "schema": {
+          "type": "string"
+        },
+        "description": "Accept for /v1 representations."
+      },
+      "Access-Control-Allow-Origin": {
+        "schema": {
+          "type": "string",
+          "const": "*"
+        }
+      }
+    },
+    "examples": {
+      "Compact": {
+        "summary": "Illustrative compact multi-product snapshot, not live prices.",
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2
+            ],
+            "sourceDate": "2026-09-29",
+            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
+            "validFrom": "2026-09-29T06:00:00.000+08:00",
+            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+              "attributes": {
+                "name": "Example Station",
+                "tradingName": "Example Station",
+                "brand": 5,
+                "price": {
+                  "asAt": "2026-09-29T06:00:00.000+08:00",
+                  "products": {
+                    "1": 185.9,
+                    "2": 199.9
+                  }
+                },
+                "address": {
+                  "street": "1 Test Road",
+                  "suburb": "PERTH",
+                  "state": "WA",
+                  "postcode": null
+                },
+                "is24Hours": null,
+                "phone": null,
+                "latitude": -31.95,
+                "longitude": 115.86,
+                "siteFeatures": [
+                  1,
+                  4
+                ],
+                "restrictions": null
+              }
+            }
+          ]
+        }
+      },
+      "Expanded": {
+        "summary": "The same selection with expand=all.",
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2
+            ],
+            "sourceDate": "2026-09-29",
+            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
+            "validFrom": "2026-09-29T06:00:00.000+08:00",
+            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+              "attributes": {
+                "name": "Example Station",
+                "tradingName": "Example Station",
+                "brand": {
+                  "code": 5,
+                  "name": "BP",
+                  "logo": "/static/image/brand/bp.svg"
+                },
+                "price": {
+                  "asAt": "2026-09-29T06:00:00.000+08:00",
+                  "products": {
+                    "1": 185.9,
+                    "2": 199.9
+                  }
+                },
+                "address": {
+                  "street": "1 Test Road",
+                  "suburb": "PERTH",
+                  "state": "WA",
+                  "postcode": null
+                },
+                "is24Hours": null,
+                "phone": null,
+                "latitude": -31.95,
+                "longitude": 115.86,
+                "siteFeatures": [
+                  {
+                    "code": 1,
+                    "name": "Credit Cards"
+                  },
+                  {
+                    "code": 4,
+                    "name": "ATM"
+                  }
+                ],
+                "restrictions": null
+              }
+            }
+          ]
+        }
+      },
+      "Empty": {
+        "summary": "A valid selection with no matching stations.",
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2
+            ],
+            "sourceDate": "2026-09-29",
+            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
+            "validFrom": "2026-09-29T06:00:00.000+08:00",
+            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "publicationStatus": "empty",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues"
+          },
+          "data": []
+        }
+      },
+      "SingleProduct": {
+        "summary": "Illustrative unleaded-only snapshot.",
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "sourceDate": "2026-09-29",
+            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
+            "validFrom": "2026-09-29T06:00:00.000+08:00",
+            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "product": 1
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+              "attributes": {
+                "name": "Example Station",
+                "tradingName": "Example Station",
+                "brand": 5,
+                "price": {
+                  "asAt": "2026-09-29T06:00:00.000+08:00",
+                  "products": {
+                    "1": 185.9
+                  }
+                },
+                "address": {
+                  "street": "1 Test Road",
+                  "suburb": "PERTH",
+                  "state": "WA",
+                  "postcode": null
+                },
+                "is24Hours": null,
+                "phone": null,
+                "latitude": -31.95,
+                "longitude": 115.86,
+                "siteFeatures": [
+                  1,
+                  4
+                ],
+                "restrictions": null
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "x-contract-notes": [
+    "Case-insensitive query names and text values cannot be enforced by standard OpenAPI parameter matching.",
+    "Parameter aliases are mutually exclusive, repeated names are invalid, and list entries are trimmed and deduplicated.",
+    "expand controls whole-field representation; schemas allow either shape but cannot enforce its relationship to a request parameter.",
+    "For region queries or suburb queries without surrounding=no, product\u00d7brand\u00d7region\u00d7suburb combinations must not exceed 24.",
+    "Absolute query dates must be within yesterday/today/tomorrow in Australia/Perth at request time."
+  ]
+}

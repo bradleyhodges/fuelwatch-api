@@ -1,0 +1,41 @@
+---
+title: Brand logos
+description: Serve supplied brand artwork without fetching price data.
+---
+
+## GET `/static/image/brand/{filename}`
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Read a brand logo" method="GET" path="/static/image/brand/bp.svg" hideTitle={true}>
+      Expanded brand references advertise a root-relative SVG URL. Existing files are served directly by Cloudflare Static Assets, before the price Worker runs.
+    </ReferenceHeader>
+    <FieldTable title="Path parameter" fields={[
+      {name: "filename", type: "string", required: true, description: "Use the exact lowercase filename from brand.logo, including .svg. Filenames are case-sensitive."}
+    ]} />
+  </div>
+  <CodeRail>
+
+```bash title="Request"
+curl -I 'https://fuelwatch.oss.bhodges.me/static/image/brand/bp.svg'
+```
+
+```js title="Resolve the advertised URL"
+const logoUrl = new URL(
+  station.attributes.brand.logo,
+  "https://fuelwatch.oss.bhodges.me",
+);
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+Successful responses use `Content-Type: image/svg+xml`, `Cache-Control: public, max-age=86400`, an ETag, public CORS and `X-Content-Type-Options: nosniff`. A restrictive content security policy prevents SVG scripts and external resource loads.
+
+`HEAD` returns image headers without a body. Conditional requests can return `304`. Unknown paths return `404`; they do not query FuelWatch or Google. Existing static images support GET/HEAD and reject other methods, including OPTIONS. Normal image embedding uses simple CORS and does not require a preflight.
+
+## Generic artwork
+
+Unknown brands (0), Ampol (2), BOC (4), Independent (15), OTR (42) and OMG Caltex (48) currently use `generic.svg` because a matching dedicated SVG was not supplied. The fallback does not change the brand's code or name.
+
+Logo URLs are stable but artwork may change. Do not cache indefinitely. Display the brand's name as accessible alternative text when the image conveys that name; use an empty alt attribute when adjacent text already supplies it.

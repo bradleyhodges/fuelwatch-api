@@ -1,0 +1,83 @@
+---
+title: Reference expansion
+description: Keep references compact or expand selected fields into named objects.
+---
+
+By default, `brand` is one integer, `siteFeatures` is an array of integers, and `restrictions` is an array of integers or `null`. See the complete [code tables](/docs/api-reference/codes).
+
+## Choose fields
+
+| Request | Brand | Features | Restrictions |
+| --- | --- | --- | --- |
+| No `expand` | Code | Codes | Codes or null |
+| `expand=brand` | Object | Codes | Codes or null |
+| `expand=siteFeatures,restrictions` | Code | Objects | Objects or null |
+| `expand=all` | Object | Objects | Objects or null |
+
+Names and values are case-insensitive: `ExPaNd=BRAND,siteFEATURES` works. Whitespace is trimmed and repeated members deduplicated. `all,brand` is equivalent to `all`. An empty value, unknown field, empty member or repeated `expand` parameter returns `400`. `filter[expand]` is unsupported.
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Expand a brand" method="GET" path="/v1?expand=brand">
+      A brand object contains a stable code, display name and root-relative logo URL. Resolve the logo against the API origin, not your own website.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```json title="Compact"
+{"brand": 5, "siteFeatures": [1, 4], "restrictions": [3]}
+```
+
+```json title="expand=brand"
+{
+  "brand": {
+    "code": 5,
+    "name": "BP",
+    "logo": "/static/image/brand/bp.svg"
+  },
+  "siteFeatures": [1, 4],
+  "restrictions": [3]
+}
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+<ReferenceGrid>
+  <div>
+    <ReferenceHeader title="Expand features and restrictions">
+      Both collections use objects with code and name. Every nonempty collection uses one representation; expansion does not introduce a mix of integers and objects.
+    </ReferenceHeader>
+  </div>
+  <CodeRail>
+
+```json title="expand=siteFeatures,restrictions"
+{
+  "brand": 5,
+  "siteFeatures": [
+    {"code": 1, "name": "Credit Cards"},
+    {"code": 4, "name": "ATM"}
+  ],
+  "restrictions": [
+    {"code": 3, "name": "Membership Required"}
+  ]
+}
+```
+
+  </CodeRail>
+</ReferenceGrid>
+
+## Missing and unknown information
+
+Empty features stay `[]`, and no known restrictions stays `null` even with `expand=all`. These values do not prove a facility or restriction is absent.
+
+An unmapped source brand uses code `0` and preserves its name in `sourceNotes.brand`. When expanded, code `0` retains that source name and uses the generic logo. Independent remains code `15`.
+
+Unrecognized source feature/restriction text is retained in `sourceNotes`; it never receives a guessed code. Reference codes must not be recycled or renumbered.
+
+## Cache behavior
+
+Expansion changes the response body, ETag and rendered cache entry. It preserves station IDs, selected products and original fetch time. Equivalent expansion sets share a cache entry. It does not perform extra RSS or Google lookups and does not create separate D1 price snapshots.
+
+Expansion applies only to `/v1`. `/legacy` retains string fields and rejects `expand`. There is no expansion for price products, addresses or enrichment: those fields retain their documented shape.
+

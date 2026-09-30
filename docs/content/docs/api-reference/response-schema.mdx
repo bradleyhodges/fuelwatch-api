@@ -1,0 +1,68 @@
+---
+title: Response schemas
+description: Field definitions derived from the OpenAPI contract.
+---
+
+These are HTTP document shapes, not SDK classes. Codes and expanded objects are both valid representations, controlled by [`expand`](/docs/expansion).
+
+Prices are JSON numbers in Australian cents per litre; product keys are strings. Timestamps use AWST, postcodes stay strings, and null means unavailable rather than an empty string or zero.
+
+<TypeShape typeName="PriceDocument" />
+
+<TypeShape typeName="JsonApi" />
+
+<TypeShape typeName="Metadata" />
+
+<TypeShape typeName="ServiceStation" />
+
+<TypeShape typeName="StationAttributes" />
+
+<TypeShape typeName="Price" />
+
+<TypeShape typeName="Address" />
+
+<TypeShape typeName="BrandCode" />
+
+<TypeShape typeName="Brand" />
+
+<TypeShape typeName="ProductCode" />
+
+<TypeShape typeName="FeatureCode" />
+
+<TypeShape typeName="SiteFeature" />
+
+<TypeShape typeName="RestrictionCode" />
+
+<TypeShape typeName="Restriction" />
+
+<TypeShape typeName="OpeningHours" />
+
+<TypeShape typeName="SourceNotes" />
+
+<TypeShape typeName="Enrichment" />
+
+<TypeShape typeName="Attribution" />
+
+<TypeShape typeName="ErrorDocument" />
+
+<TypeShape typeName="ApiError" />
+
+<TypeShape typeName="LegacyDocument" />
+
+<TypeShape typeName="LegacyItem" />
+
+<TypeShape typeName="LegacyError" />
+
+## Absent versus null
+
+- `phone`, `address.postcode` and `is24Hours` are always present and can be null.
+- `siteFeatures` is always an array, including when empty.
+- `restrictions` is null when no known restriction is supplied.
+- `openHours` is optional and omitted for confirmed 24-hour opening. Unknown weekdays are omitted.
+- `sourceNotes` and `enrichment` are optional.
+- `price.products` omits unavailable products.
+- `meta.product` appears for one selected fuel; `meta.products` appears for multiple selected fuels. They never coexist.
+- Unknown informational metadata can be added without changing the station resource contract.
+
+Enrichment does not introduce RSS `title`, `image`, `description` or `schemaVersion` fields. See [station details and attribution](/docs/enrichment) for source precedence.
+
