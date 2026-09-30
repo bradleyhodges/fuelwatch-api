@@ -121,6 +121,10 @@ describe("documentation navigation and examples", () => {
         expect(stationText).toContain('"type": "serviceStation"');
         expect(stationText).toContain("| product | ProductCode[] |");
         expect(stationText).not.toMatch(/<(ApiExample|FieldTable|RequiredHeaders)/);
+        for (const text of [schemaText, stationText]) {
+            expect(text).toContain("[product codes](/docs/api-reference/codes#products)");
+            expect(text).toContain("1 ([Unleaded Petrol](/docs/api-reference/codes#products))");
+        }
         expect(
             schemas.data.structuredData.contents.some((item) =>
                 item.content.includes("googleMapsUri"),

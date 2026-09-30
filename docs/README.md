@@ -25,6 +25,7 @@ Set `NEXT_PUBLIC_SITE_URL=https://docs.fuelwatch.oss.bhodges.me` for production 
 - Preserve `ReferenceGrid`, `ReferenceHeader`, `FieldTable`, `CodeRail` and note components for the two-column reference style.
 - `public/openapi.json` is the downloadable OpenAPI 3.1 contract. Update it alongside prose when the Worker changes.
 - `src/lib/reference-types.ts` derives expandable field tables and type links from the OpenAPI schemas.
+- Controlled enums use names from `reference-codes.json` and link to their reference tables. Field/schema description strings support internal Markdown links, such as `[product codes](/docs/api-reference/codes#products)`, in both visual pages and Markdown exports.
 - `ApiExample` renders complete validated examples from the specification; illustrative prices are never live data.
 - `src/lib/reference-codes.json` is the documentation snapshot of brand, product, feature, restriction and region codes. Never infer identifiers from array positions.
 - `src/lib/shared.ts` supplies FuelWatch branding, repository links and the canonical docs origin.

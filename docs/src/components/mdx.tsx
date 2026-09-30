@@ -25,7 +25,7 @@ import { type JsonHighlightToken, tokenizeJsonForHighlight } from "@/lib/json-hi
 import {
     buildReferenceExample,
     findReferenceShape,
-    getReferenceEnumValues,
+    getFieldEnumValues,
     getReferenceShape,
     groupDottedReferenceFields,
     type ReferenceEnumValue,
@@ -510,7 +510,9 @@ function FieldRows({
                         </div>
 
                         <div className="text-[14px] text-fd-muted-foreground leading-relaxed">
-                            <div>{field.description}</div>
+                            <div>
+                                <ReferenceDescription>{field.description}</ReferenceDescription>
+                            </div>
 
                             {field.defaultValue ? (
                                 <div className="mt-0.5 text-[13px]">
@@ -590,6 +592,26 @@ function FieldRows({
     );
 }
 
+/** Render internal Markdown links without evaluating HTML or arbitrary link protocols. */
+function ReferenceDescription({ children }: { children: ReactNode }) {
+    if (typeof children !== "string") return children;
+    const parts: ReactNode[] = [];
+    let offset = 0;
+    for (const match of children.matchAll(
+        /\[([^\]\n]+)\]\((\/docs(?:\/[a-z0-9/_-]+)?(?:#[a-z0-9_-]+)?)\)/gi,
+    )) {
+        parts.push(children.slice(offset, match.index));
+        parts.push(
+            <a key={match.index} href={match[2]}>
+                {match[1]}
+            </a>,
+        );
+        offset = match.index + match[0].length;
+    }
+    parts.push(children.slice(offset));
+    return parts;
+}
+
 function EnumValueList({ values }: { values: readonly ReferenceEnumValue[] }) {
     return (
         <div className="mt-3 overflow-hidden rounded-lg border border-fd-border bg-fd-background">
@@ -599,9 +621,25 @@ function EnumValueList({ values }: { values: readonly ReferenceEnumValue[] }) {
             <div className="divide-y divide-fd-border">
                 {values.map((item) => (
                     <div className="px-3 py-2.5" key={item.value}>
-                        <code className="rounded-md border border-fd-border bg-fd-muted/60 px-1.5 py-0.75 font-mono text-[11.5px] text-fd-foreground">
-                            {item.value}
-                        </code>
+                        <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                            <code className="shrink-0 rounded-md border border-fd-border bg-fd-muted/60 px-1.5 py-0.75 font-mono text-[11.5px] text-fd-foreground">
+                                {item.value}
+                            </code>
+                            {item.label ? (
+                                item.href ? (
+                                    <a
+                                        href={item.href}
+                                        className="font-normal! text-[13px] text-fd-muted-foreground! underline-offset-4 hover:text-fd-foreground! hover:underline"
+                                    >
+                                        {item.label}
+                                    </a>
+                                ) : (
+                                    <span className="text-[13px] text-fd-muted-foreground">
+                                        {item.label}
+                                    </span>
+                                )
+                            ) : null}
+                        </div>
                         {item.description ? (
                             <p className="mt-2 mb-0 text-[13px] text-fd-muted-foreground leading-relaxed">
                                 {item.description}
@@ -612,18 +650,6 @@ function EnumValueList({ values }: { values: readonly ReferenceEnumValue[] }) {
             </div>
         </div>
     );
-}
-
-function getFieldEnumValues(field: ReferenceField): readonly ReferenceEnumValue[] {
-    if (field.enumValues?.length) {
-        return field.enumValues;
-    }
-
-    if (field.allowedValues?.length) {
-        return field.allowedValues.map((value) => ({ value }));
-    }
-
-    return getReferenceEnumValues(field.type) ?? [];
 }
 
 function TypeText({ type }: { type: string }) {
@@ -783,7 +809,7 @@ export function TypeShape({ typeName }: { typeName: string }) {
                 {typeName}
             </h2>
             <p className="m-0 max-w-170 text-[15px] text-fd-muted-foreground leading-[1.75]">
-                {shape.description}
+                <ReferenceDescription>{shape.description}</ReferenceDescription>
             </p>
             <FieldTable title="Fields" fields={shapeFieldsToReferenceFields(shape.fields) ?? []} />
         </section>

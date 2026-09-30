@@ -1,6 +1,6 @@
 import type { StringifyOptions } from "fumadocs-core/mdx-plugins/remark-structure";
 import specification from "../../public/openapi.json";
-import { getReferenceShape, type ReferenceShapeField } from "./reference-types";
+import { getFieldEnumValues, getReferenceShape, type ReferenceShapeField } from "./reference-types";
 
 type MdxNode = Extract<
     Parameters<NonNullable<StringifyOptions["stringify"]>>[0],
@@ -54,12 +54,19 @@ const cell = (value: string): string => value.replace(/\|/g, "\\|").replace(/\s*
 function fieldsMarkdown(fields: readonly ReferenceShapeField[], prefix = ""): string {
     return fields
         .map((field) => {
+            const enumValues = getFieldEnumValues(field);
             const details = [
                 field.description,
                 field.defaultValue !== undefined ? `Default: ${field.defaultValue}.` : "",
-                field.allowedValues ? `Allowed: ${field.allowedValues.join(", ")}.` : "",
-                field.enumValues
-                    ? `Allowed: ${field.enumValues.map((item) => item.value).join(", ")}.`
+                enumValues.length
+                    ? `Allowed: ${enumValues
+                          .map((item) => {
+                              const { label, href } = item;
+                              return label
+                                  ? `${item.value} (${href ? `[${label}](${href})` : label})`
+                                  : item.value;
+                          })
+                          .join(", ")}.`
                     : "",
             ]
                 .filter(Boolean)

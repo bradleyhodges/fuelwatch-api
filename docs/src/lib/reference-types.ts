@@ -1,6 +1,12 @@
 import specification from "../../public/openapi.json";
+import codes from "./reference-codes.json";
 
-export type ReferenceEnumValue = { description?: string; value: string };
+export type ReferenceEnumValue = {
+    description?: string;
+    value: string;
+    label?: string;
+    href?: string;
+};
 export type ReferenceShapeField = {
     allowedValues?: string[];
     defaultValue?: string;
@@ -30,6 +36,15 @@ type Schema = {
     oneOf?: Schema[];
 };
 const schemas: Record<string, Schema> = specification.components.schemas;
+const codeTables: Record<
+    string,
+    { entries: readonly { code: number; name: string }[]; anchor: string }
+> = {
+    ProductCode: { entries: codes.products, anchor: "products" },
+    BrandCode: { entries: codes.brands, anchor: "brands" },
+    FeatureCode: { entries: codes.siteFeatures, anchor: "site-features" },
+    RestrictionCode: { entries: codes.restrictions, anchor: "restrictions" },
+};
 export const referenceTypeNames = Object.keys(schemas).sort();
 export type ReferenceTypeToken = { href?: string; text: string };
 
@@ -55,14 +70,37 @@ export function tokenizeReferenceType(type: string): ReferenceTypeToken[] {
             ...(getReferenceTypeHref(text) ? { href: getReferenceTypeHref(text) } : {}),
         }));
 }
-/** Read enum values from the same OpenAPI schema used to validate examples. */
+/** Keep OpenAPI enum membership authoritative; enrich only known codes from the matching family. */
 export function getReferenceEnumValues(type: string): readonly ReferenceEnumValue[] | undefined {
     for (const name of getReferenceTypeNames(type)) {
         const values = schemas[name]?.enum;
-        if (values) return values.map((value) => ({ value: String(value) }));
+        if (!values) continue;
+        const table = Object.hasOwn(codeTables, name) ? codeTables[name] : undefined;
+        return values.map((value) => {
+            const entry = table?.entries.find((entry) => entry.code === value);
+            return {
+                value: String(value),
+                ...(entry && table
+                    ? {
+                          label: entry.name,
+                          href: `/docs/api-reference/codes#${table.anchor}`,
+                      }
+                    : {}),
+            };
+        });
     }
     return undefined;
 }
+
+/** Resolve explicit values before schema-derived enums in both HTML and Markdown renderers. */
+export function getFieldEnumValues(
+    field: Pick<ReferenceShapeField, "enumValues" | "allowedValues" | "type">,
+): readonly ReferenceEnumValue[] {
+    if (field.enumValues?.length) return field.enumValues;
+    if (field.allowedValues?.length) return field.allowedValues.map((value) => ({ value }));
+    return getReferenceEnumValues(field.type) ?? [];
+}
+
 function typeText(schema: Schema): string {
     if (schema.$ref) return schema.$ref.split("/").at(-1) ?? "unknown";
     if (schema.const !== undefined) return JSON.stringify(schema.const);
@@ -101,7 +139,7 @@ export function getReferenceShape(typeName: string): ReferenceShape | undefined 
                       type: typeText(schema),
                       required: true,
                       description: schema.description ?? "Accepted value.",
-                      enumValues: schema.enum?.map((value) => ({ value: String(value) })),
+                      enumValues: getReferenceEnumValues(typeName),
                   },
               ],
     };

@@ -12,9 +12,9 @@ description: GET /v1 returns one resource per station with all selected fuel pri
     </ReferenceHeader>
     <RequiredHeaders />
     <FieldTable title="Query parameters" fields={[
-      {name: "product", type: "ProductCode[]", description: "Comma-separated product codes. Defaults to all seven."},
-      {name: "brand", type: "integer[]", description: "Comma-separated known FuelWatch brand codes from the reference code table. Code 0 is response-only and is rejected as a filter."},
-      {name: "region", type: "integer[]", description: "Comma-separated region codes. Uses source-side selection."},
+      {name: "product", type: "ProductCode[]", description: "Comma-separated [product codes](/docs/api-reference/codes#products). Defaults to all seven."},
+      {name: "brand", type: "integer[]", description: "Comma-separated known FuelWatch [brand codes](/docs/api-reference/codes#brands). Code 0 is response-only and is rejected as a filter."},
+      {name: "region", type: "integer[]", description: "Comma-separated [region codes](/docs/api-reference/codes#regions). Uses source-side selection."},
       {name: "suburb", type: "string[]", description: "Comma-separated suburb names. Pair with surrounding=no for exact suburbs."},
       {name: "day", type: "string", defaultValue: "today", description: "yesterday, today, tomorrow or DD/MM/YYYY within those three Perth dates."},
       {name: "surrounding", type: "string", allowedValues: ["yes", "no"], description: "Omission uses source behavior; no gives exact suburb matching."},
