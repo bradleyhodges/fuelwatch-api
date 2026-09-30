@@ -14,7 +14,7 @@ import {
 import headers from "../src/asset-headers.json" with { type: "json" };
 
 const source = new URL(
-    "../../../hacs-fuelwatch/custom_components/fuelwatch_wa/assets/brands/",
+    "../../common/assets/brands/",
     import.meta.url,
 );
 const output = new URL("../public/static/image/brand/", import.meta.url);
