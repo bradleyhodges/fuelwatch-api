@@ -8,9 +8,9 @@
     "build": {
         "command": "node scripts/prepare-assets.mjs",
         "watch_dir": [
-            "../custom_components/fuelwatch_wa/assets/brands",
+            "../common/assets/brands",
             "src/asset-headers.json",
-            "../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json",
+            "../common/reference_data.json",
             "scripts/prepare-assets.mjs"
         ]
     },

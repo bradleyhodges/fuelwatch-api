@@ -157,7 +157,7 @@ Wrangler's custom build automatically stages the original logos from `../custom_
 
 Ampol (2), BOC (4), Independent (15), OTR (42), OMG Caltex (48), and unknown brands (0) currently use `generic.svg` because no matching brand-specific artwork was supplied. A generic logo never changes the brand code or name.
 
-The shared registry is `../../hacs-fuelwatch/custom_components/fuelwatch_wa/reference_data.json`, bundled by the Worker and shipped with Home Assistant. Brand codes match FuelWatch. Feature/restriction codes are explicit API identifiers, **not array positions**: never renumber, recycle or reassign existing codes. Add new records deliberately, update normalization when needed, and ship the matching integration registry. Tests check coverage of every controlled label and real asset delivery for every advertised logo. The adapter accepts compact codes, expanded objects and previous string labels, preserving existing human-readable entity attributes and saved vendor filters.
+The shared registry is `../common/reference_data.json`, bundled by the Worker and shipped with Home Assistant. Brand codes match FuelWatch. Feature/restriction codes are explicit API identifiers, **not array positions**: never renumber, recycle or reassign existing codes. Add new records deliberately, update normalization when needed, and ship the matching integration registry. Tests check coverage of every controlled label and real asset delivery for every advertised logo. The adapter accepts compact codes, expanded objects and previous string labels, preserving existing human-readable entity attributes and saved vendor filters.
 
 #### Brand codes
 
