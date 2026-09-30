@@ -24,21 +24,7 @@ Names and values are case-insensitive: `ExPaNd=BRAND,siteFEATURES` works. Whites
   </div>
   <CodeRail>
 
-```json title="Compact"
-{"brand": 5, "siteFeatures": [1, 4], "restrictions": [3]}
-```
-
-```json title="expand=brand"
-{
-  "brand": {
-    "code": 5,
-    "name": "BP",
-    "logo": "/static/image/brand/bp.svg"
-  },
-  "siteFeatures": [1, 4],
-  "restrictions": [3]
-}
-```
+<ApiExample name="BrandExpanded" />
 
   </CodeRail>
 </ReferenceGrid>
@@ -51,21 +37,12 @@ Names and values are case-insensitive: `ExPaNd=BRAND,siteFEATURES` works. Whites
   </div>
   <CodeRail>
 
-```json title="expand=siteFeatures,restrictions"
-{
-  "brand": 5,
-  "siteFeatures": [
-    {"code": 1, "name": "Credit Cards"},
-    {"code": 4, "name": "ATM"}
-  ],
-  "restrictions": [
-    {"code": 3, "name": "Membership Required"}
-  ]
-}
-```
+<ApiExample name="FeaturesExpanded" />
 
   </CodeRail>
 </ReferenceGrid>
+
+Both examples are complete responses captured for the same Costco Perth Airport selection. Compare them with the [compact and fully expanded responses](/docs/api-reference/service-stations). Expansion changes only the selected reference representations; it does not remove the price, address, opening hours or enrichment information.
 
 ## Missing and unknown information
 

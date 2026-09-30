@@ -3,18 +3,18 @@ title: Dates and price periods
 description: Understand publication, calendar selection and effective prices in AWST.
 ---
 
-All JSON timestamps use Australian Western Standard Time, UTC+08:00. Perth has no daylight-saving change in this API. A `sourceDate` is a date-only value; HTTP protocol dates, such as an HTTP-date received from upstream, retain their protocol format.
+Normalized `/v1` timestamps use Australian Western Standard Time, UTC+08:00. Perth has no daylight-saving change in this API. A `sourceDate` is a date-only value; HTTP protocol dates retain their protocol format, and [legacy parser fields](/docs/api-reference/legacy) can retain UTC.
 
 ## Calendar date and price period
 
 `day=today` selects the current Perth calendar date. That date's price period begins at 06:00 AWST and ends at 06:00 the following day, with an exclusive end.
 
-For `sourceDate=2026-09-29`:
+The captured [Costco Perth Airport response](/docs/api-reference/service-stations) has `sourceDate=2026-09-30` and these metadata values:
 
 ```json
 {
-  "validFrom": "2026-09-29T06:00:00.000+08:00",
-  "validUntil": "2026-09-30T06:00:00.000+08:00"
+  "validFrom": "2026-09-30T06:00:00.000+08:00",
+  "validUntil": "2026-10-01T06:00:00.000+08:00"
 }
 ```
 

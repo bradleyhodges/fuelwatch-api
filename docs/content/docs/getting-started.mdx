@@ -8,7 +8,7 @@ description: Make your first request and read a station's published prices.
 <ReferenceGrid>
   <div>
     <ReferenceHeader title="Read unleaded prices" method="GET" path="/v1" hideTitle={true}>
-      Product 1 is unleaded petrol. The default day is the current Perth calendar date. Each result is one station, even when several products are selected.
+      Product 1 is unleaded petrol. This request selects Costco in Perth Airport so the complete response is easy to inspect. The default day is the current Perth calendar date. Remove brand, suburb and surrounding to request all stations selling this product.
     </ReferenceHeader>
     <Note>
       Before 06:00 AWST, yesterday's price period is still in effect. Use `day=yesterday` for currently effective prices at that time. See [price periods](/docs/price-periods).
@@ -16,11 +16,7 @@ description: Make your first request and read a station's published prices.
   </div>
   <CodeRail>
 
-```bash title="Request"
-curl --fail-with-body \
-  'https://fuelwatch.oss.bhodges.me/v1?product=1' \
-  -H 'Accept: application/vnd.api+json'
-```
+<ApiExample name="SingleProduct" />
 
   </CodeRail>
 </ReferenceGrid>
@@ -29,9 +25,7 @@ curl --fail-with-body \
 
 The collection is `data`. Station fields live under `attributes`, and `attributes.price.products` maps product IDs to cents per litre. JSON object keys are strings: use `products["1"]`, not a property named `unleaded`.
 
-The following response is illustrative. Its fixed dates and prices are not a live quote.
-
-<ApiExample name="SingleProduct" />
+The response above was captured from production, with every field retained. It includes a real phone number, opening hours, a membership restriction and enrichment provenance. Its dates and prices are a historical snapshot; rerunning the command returns the current selection.
 
 Check `meta.sourceDate`, `validFrom`, `validUntil` and `publicationStatus` before treating prices as currently effective. A successful request can have an empty `data` array.
 

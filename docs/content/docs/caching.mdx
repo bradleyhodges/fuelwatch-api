@@ -11,25 +11,27 @@ A published snapshot is reusable for up to six hours from its original fetch. Re
 
 The actual response lifetime is the shortest applicable limit: remaining source age, next Perth midnight, the price-period end, and any enrichment refresh/retention boundary. Empty or unpublished results use at most 30 seconds.
 
-Typical published headers:
+Selected headers from the [compact Costco Perth Airport response](/docs/api-reference/service-stations), captured on 30 September 2026 at 11:42:42 AWST:
 
 ```http
-Cache-Control: public, max-age=0, s-maxage=21599
-ETag: "opaque-response-validator"
-X-FuelWatch-Cache: HIT
-X-FuelWatch-Snapshot-Cache: MISS
-X-FuelWatch-Source-Date: 2026-09-29
-X-FuelWatch-Fetched-At: 2026-09-29T16:00:00.000+08:00
-Vary: Accept
+Cache-Control: public, max-age=0, s-maxage=19088
+ETag: W/"edfa659908ce911fde4c9051b80697cc4f9bbaa4fce80cefb3b231932e071b2d"
+X-FuelWatch-Cache: MISS
+X-FuelWatch-Snapshot-Cache: HIT
+X-FuelWatch-Source-Date: 2026-09-30
+X-FuelWatch-Fetched-At: 2026-09-30T11:00:52.278+08:00
+Vary: Accept, accept-encoding
 ```
 
-These are illustrative values. `max-age=0` requires browser/private caches to revalidate; `s-maxage` applies to shared caches. Follow the returned headers instead of assuming a fresh six-hour window. Errors, expired periods and other uncacheable responses use `no-store`.
+These are recorded values, not fixed server settings. `max-age=0` requires browser/private caches to revalidate; `s-maxage` applies to shared caches. Follow the returned headers instead of assuming a fresh six-hour window. Errors, expired periods and other uncacheable responses use `no-store`.
 
 `X-FuelWatch-Cache` is `HIT` or `MISS` for the rendered response. `X-FuelWatch-Snapshot-Cache` is `HIT`, `MISS` or `BYPASS` from when that response was built. An edge hit can therefore still carry `Snapshot-Cache: MISS`; it does not mean another RSS request just occurred.
 
 ## Conditional requests
 
 Store the exact quoted ETag with its URL and payload, then send `If-None-Match` for that same selection. A matching response is `304` with no body. Keep the stored document and original fetch timestamp; do not try to parse JSON from a `304`.
+
+Replaying the captured request with the ETag above returned HTTP 304 with an empty body at 11:44:00 AWST on 30 September 2026. This validator belongs to that historical representation; a later request can correctly return `200` with a new document and validator.
 
 <ReferenceGrid>
   <div>

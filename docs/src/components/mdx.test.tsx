@@ -61,10 +61,21 @@ describe("FuelWatch reference components", () => {
         );
         expect(html).toContain("Show 5 more");
     });
-    it("renders the validated expanded example with the real logo path", () => {
+    it("renders a complete captured response with enrichment and its reproducible request", () => {
         const html = renderToStaticMarkup(<ApiExample name="Expanded" />);
-        expect(html).toContain("/static/image/brand/bp.svg");
+        expect(html).toContain("Costco Perth Airport");
+        expect(html).toContain("/static/image/brand/costco.svg");
+        expect(html).toContain("Google Maps");
+        expect(html).toContain("ChIJw1UkrSm5MioRiEMGrwrsOUI");
+        expect(html).toContain("openHours");
+        expect(html).toContain("Membership Required");
+        expect(html).toContain("surrounding=no&amp;expand=all");
+        expect(html).toContain("Captured");
+        expect(html).toContain("+08:00");
+        expect(html).toContain("HTTP 200");
         expect(html).toContain("serviceStation");
+        // The code block copy action reads a descendant pre; both request and response need one.
+        expect(html.match(/role="region"[^>]*><pre[^>]*><code/g)).toHaveLength(2);
         expect(html).not.toContain("Bearer");
     });
     it("documents public JSON:API request headers without authentication", () => {

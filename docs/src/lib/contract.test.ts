@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import SwaggerParser from "@apidevtools/swagger-parser";
@@ -33,8 +34,26 @@ describe("published HTTP contract", () => {
     });
     it.each(Object.entries(specification.components.examples))(
         "validates the %s example",
-        (_name, example) => {
-            expect(validate(example.value), JSON.stringify(validate.errors)).toBe(true);
+        (name, example) => {
+            const schema =
+                name === "Legacy"
+                    ? "LegacyDocument"
+                    : name === "InvalidProduct"
+                      ? "ErrorDocument"
+                      : "PriceDocument";
+            const validateExample = ajv.compile({
+                $ref: `fuelwatch-contract#/components/schemas/${schema}`,
+            });
+            expect(validateExample(example.value), JSON.stringify(validateExample.errors)).toBe(
+                true,
+            );
+            const capture = example["x-capture"];
+            expect(new URL(capture.url).origin).toBe("https://fuelwatch.oss.bhodges.me");
+            expect(capture.capturedAt).toMatch(/T\d{2}:\d{2}:\d{2}\.\d{3}\+08:00$/);
+            expect(createHash("sha256").update(JSON.stringify(example.value)).digest("hex")).toBe(
+                capture.bodySha256,
+            );
+            expect(capture.status).toBe(name === "InvalidProduct" ? 400 : 200);
         },
     );
     it("rejects obsolete brands, mixed references, ambiguous product metadata and UTC timestamps", () => {
@@ -121,6 +140,11 @@ describe("documentation navigation and examples", () => {
         expect(stationText).toContain('"type": "serviceStation"');
         expect(stationText).toContain("| product | ProductCode[] |");
         expect(stationText).not.toMatch(/<(ApiExample|FieldTable|RequiredHeaders)/);
+        expect(stationText).toContain("Costco Perth Airport");
+        expect(stationText).toContain('"enrichment"');
+        expect(stationText).toContain("surrounding=no");
+        expect(stationText).toContain("Captured");
+        expect(stationText).toContain("HTTP 200");
         for (const text of [schemaText, stationText]) {
             expect(text).toContain("[product codes](/docs/api-reference/codes#products)");
             expect(text).toContain("1 ([Unleaded Petrol](/docs/api-reference/codes#products))");

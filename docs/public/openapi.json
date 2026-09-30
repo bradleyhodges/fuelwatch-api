@@ -529,6 +529,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LegacyDocument"
+                },
+                "examples": {
+                  "Legacy": {
+                    "$ref": "#/components/examples/Legacy"
+                  }
                 }
               }
             }
@@ -939,7 +944,7 @@
             "format": "date-time",
             "pattern": "\\+08:00$",
             "examples": [
-              "2026-09-29T06:00:00.000+08:00"
+              "2026-09-30T06:00:00.000+08:00"
             ]
           },
           "products": {
@@ -1110,7 +1115,7 @@
             "format": "date-time",
             "pattern": "\\+08:00$",
             "examples": [
-              "2026-09-29T16:00:00.000+08:00"
+              "2026-09-29T18:36:18.295+08:00"
             ]
           },
           "stale": {
@@ -1302,7 +1307,7 @@
             "format": "date-time",
             "pattern": "\\+08:00$",
             "examples": [
-              "2026-09-29T16:00:00.000+08:00"
+              "2026-09-30T11:00:52.278+08:00"
             ]
           },
           "validFrom": {
@@ -1311,7 +1316,7 @@
             "format": "date-time",
             "pattern": "\\+08:00$",
             "examples": [
-              "2026-09-29T06:00:00.000+08:00"
+              "2026-09-30T06:00:00.000+08:00"
             ]
           },
           "validUntil": {
@@ -1320,7 +1325,7 @@
             "format": "date-time",
             "pattern": "\\+08:00$",
             "examples": [
-              "2026-09-30T06:00:00.000+08:00"
+              "2026-10-01T06:00:00.000+08:00"
             ]
           },
           "publicationStatus": {
@@ -2075,11 +2080,20 @@
               "Expanded": {
                 "$ref": "#/components/examples/Expanded"
               },
-              "Empty": {
-                "$ref": "#/components/examples/Empty"
+              "BrandExpanded": {
+                "$ref": "#/components/examples/BrandExpanded"
+              },
+              "FeaturesExpanded": {
+                "$ref": "#/components/examples/FeaturesExpanded"
               },
               "SingleProduct": {
                 "$ref": "#/components/examples/SingleProduct"
+              },
+              "FuelWatchOnly": {
+                "$ref": "#/components/examples/FuelWatchOnly"
+              },
+              "Empty": {
+                "$ref": "#/components/examples/Empty"
               }
             }
           }
@@ -2128,6 +2142,11 @@
           "application/vnd.api+json": {
             "schema": {
               "$ref": "#/components/schemas/ErrorDocument"
+            },
+            "examples": {
+              "InvalidProduct": {
+                "$ref": "#/components/examples/InvalidProduct"
+              }
             }
           }
         }
@@ -2337,7 +2356,7 @@
           "format": "date-time",
           "pattern": "\\+08:00$",
           "examples": [
-            "2026-09-29T16:00:00.000+08:00"
+            "2026-09-30T11:00:52.278+08:00"
           ]
         }
       },
@@ -2356,7 +2375,28 @@
     },
     "examples": {
       "Compact": {
-        "summary": "Illustrative compact multi-product snapshot, not live prices.",
+        "summary": "All products with compact reference codes",
+        "description": "Costco Perth Airport with all available fuel prices, numeric reference codes, opening hours and Google enrichment. Complete response captured 2026-09-30T11:42:42.955+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:42.955+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19088",
+            "etag": "W/\"edfa659908ce911fde4c9051b80697cc4f9bbaa4fce80cefb3b231932e071b2d\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
+          },
+          "bodySha256": "edfa659908ce911fde4c9051b80697cc4f9bbaa4fce80cefb3b231932e071b2d"
+        },
         "value": {
           "jsonapi": {
             "version": "1.1"
@@ -2365,12 +2405,17 @@
             "source": "fuelwatch.wa.gov.au",
             "products": [
               1,
-              2
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
             ],
-            "sourceDate": "2026-09-29",
-            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
-            "validFrom": "2026-09-29T06:00:00.000+08:00",
-            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
             "publicationStatus": "available",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
@@ -2380,40 +2425,86 @@
           "data": [
             {
               "type": "serviceStation",
-              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
               "attributes": {
-                "name": "Example Station",
-                "tradingName": "Example Station",
-                "brand": 5,
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
+                "brand": 32,
                 "price": {
-                  "asAt": "2026-09-29T06:00:00.000+08:00",
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
                   "products": {
-                    "1": 185.9,
-                    "2": 199.9
+                    "1": 218.7,
+                    "6": 242.7,
+                    "11": 264.7
                   }
                 },
                 "address": {
-                  "street": "1 Test Road",
-                  "suburb": "PERTH",
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
                   "state": "WA",
-                  "postcode": null
+                  "postcode": "6105"
                 },
-                "is24Hours": null,
-                "phone": null,
-                "latitude": -31.95,
-                "longitude": 115.86,
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
                 "siteFeatures": [
+                  8,
                   1,
-                  4
+                  2
                 ],
-                "restrictions": null
+                "restrictions": [
+                  3
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
               }
             }
           ]
         }
       },
       "Expanded": {
-        "summary": "The same selection with expand=all.",
+        "summary": "All references expanded, with enrichment",
+        "description": "The same Costco Perth Airport selection with named brand, site features and membership restriction; all enrichment and attribution fields are preserved. Complete response captured 2026-09-30T11:42:42.891+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=all. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:42.891+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=all",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19089",
+            "etag": "W/\"edf6d29fe9bffafd50c4b69dbaf03cd6191a8c4b16a082850090e5e8187b7fa9\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
+          },
+          "bodySha256": "edf6d29fe9bffafd50c4b69dbaf03cd6191a8c4b16a082850090e5e8187b7fa9"
+        },
         "value": {
           "jsonapi": {
             "version": "1.1"
@@ -2422,12 +2513,17 @@
             "source": "fuelwatch.wa.gov.au",
             "products": [
               1,
-              2
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
             ],
-            "sourceDate": "2026-09-29",
-            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
-            "validFrom": "2026-09-29T06:00:00.000+08:00",
-            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
             "publicationStatus": "available",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
@@ -2437,50 +2533,102 @@
           "data": [
             {
               "type": "serviceStation",
-              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
               "attributes": {
-                "name": "Example Station",
-                "tradingName": "Example Station",
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
                 "brand": {
-                  "code": 5,
-                  "name": "BP",
-                  "logo": "/static/image/brand/bp.svg"
+                  "code": 32,
+                  "name": "Costco",
+                  "logo": "/static/image/brand/costco.svg"
                 },
                 "price": {
-                  "asAt": "2026-09-29T06:00:00.000+08:00",
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
                   "products": {
-                    "1": 185.9,
-                    "2": 199.9
+                    "1": 218.7,
+                    "6": 242.7,
+                    "11": 264.7
                   }
                 },
                 "address": {
-                  "street": "1 Test Road",
-                  "suburb": "PERTH",
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
                   "state": "WA",
-                  "postcode": null
+                  "postcode": "6105"
                 },
-                "is24Hours": null,
-                "phone": null,
-                "latitude": -31.95,
-                "longitude": 115.86,
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
                 "siteFeatures": [
+                  {
+                    "code": 8,
+                    "name": "EFTPOS"
+                  },
                   {
                     "code": 1,
                     "name": "Credit Cards"
                   },
                   {
-                    "code": 4,
-                    "name": "ATM"
+                    "code": 2,
+                    "name": "Debit Cards"
                   }
                 ],
-                "restrictions": null
+                "restrictions": [
+                  {
+                    "code": 3,
+                    "name": "Membership Required"
+                  }
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
               }
             }
           ]
         }
       },
-      "Empty": {
-        "summary": "A valid selection with no matching stations.",
+      "BrandExpanded": {
+        "summary": "Brand expanded selectively",
+        "description": "Only the brand is expanded; site features and restrictions remain numeric codes. Complete response captured 2026-09-30T11:42:43.696+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=brand. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:43.696+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=brand",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19088",
+            "etag": "W/\"071f85debe34d202e5ec6e1380010b22b18dd105f01b2d452ddac91a44e3b06a\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
+          },
+          "bodySha256": "071f85debe34d202e5ec6e1380010b22b18dd105f01b2d452ddac91a44e3b06a"
+        },
         "value": {
           "jsonapi": {
             "version": "1.1"
@@ -2489,12 +2637,467 @@
             "source": "fuelwatch.wa.gov.au",
             "products": [
               1,
-              2
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
             ],
-            "sourceDate": "2026-09-29",
-            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
-            "validFrom": "2026-09-29T06:00:00.000+08:00",
-            "validUntil": "2026-09-30T06:00:00.000+08:00",
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
+              "attributes": {
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
+                "brand": {
+                  "code": 32,
+                  "name": "Costco",
+                  "logo": "/static/image/brand/costco.svg"
+                },
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": 218.7,
+                    "6": 242.7,
+                    "11": 264.7
+                  }
+                },
+                "address": {
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
+                  "state": "WA",
+                  "postcode": "6105"
+                },
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
+                "siteFeatures": [
+                  8,
+                  1,
+                  2
+                ],
+                "restrictions": [
+                  3
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "FeaturesExpanded": {
+        "summary": "Features and restrictions expanded selectively",
+        "description": "Site features and restrictions are named objects while brand remains a numeric code. Complete response captured 2026-09-30T11:42:43.611+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=siteFeatures,restrictions. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:43.611+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=siteFeatures,restrictions",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19088",
+            "etag": "W/\"c39451b878ca9bcb395e1a8b0d0622c6128e6406ddb5edd2805ae1bbfe4402ce\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
+          },
+          "bodySha256": "c39451b878ca9bcb395e1a8b0d0622c6128e6406ddb5edd2805ae1bbfe4402ce"
+        },
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
+            ],
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
+              "attributes": {
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
+                "brand": 32,
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": 218.7,
+                    "6": 242.7,
+                    "11": 264.7
+                  }
+                },
+                "address": {
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
+                  "state": "WA",
+                  "postcode": "6105"
+                },
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
+                "siteFeatures": [
+                  {
+                    "code": 8,
+                    "name": "EFTPOS"
+                  },
+                  {
+                    "code": 1,
+                    "name": "Credit Cards"
+                  },
+                  {
+                    "code": 2,
+                    "name": "Debit Cards"
+                  }
+                ],
+                "restrictions": [
+                  {
+                    "code": 3,
+                    "name": "Membership Required"
+                  }
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "SingleProduct": {
+        "summary": "Unleaded at an enriched station",
+        "description": "Only product 1 is selected, using meta.product and a single price in the grouped station resource. Complete response captured 2026-09-30T11:42:42.491+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?product=1&brand=32&suburb=PERTH%20AIRPORT&surrounding=no. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:42.491+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?product=1&brand=32&suburb=PERTH%20AIRPORT&surrounding=no",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19089",
+            "etag": "W/\"678443db0f4f764afb46a61075da2bab6f288423b54dcd56beece25604c25fc0\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.373+08:00"
+          },
+          "bodySha256": "678443db0f4f764afb46a61075da2bab6f288423b54dcd56beece25604c25fc0"
+        },
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "product": 1,
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.373+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
+              "attributes": {
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
+                "brand": 32,
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": 218.7
+                  }
+                },
+                "address": {
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
+                  "state": "WA",
+                  "postcode": "6105"
+                },
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
+                "siteFeatures": [
+                  8,
+                  1,
+                  2
+                ],
+                "restrictions": [
+                  3
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "FuelWatchOnly": {
+        "summary": "FuelWatch-only stations with unknown details",
+        "description": "Both matching MEADOW stations are retained. Their missing provider data, null postcodes and source opening hours are preserved. Complete response captured 2026-09-30T11:42:44.305+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=15&suburb=MEADOW&surrounding=no. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:44.305+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=15&suburb=MEADOW&surrounding=no",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=19087",
+            "etag": "W/\"9a8f6cea95311db770e1bcb966010262a14d5109c3789d8e80c266e39b498c09\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
+          },
+          "bodySha256": "9a8f6cea95311db770e1bcb966010262a14d5109c3789d8e80c266e39b498c09"
+        },
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
+            ],
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:319621520a443f7357aec2b6e23441ef7309cc0e4bc2a5b45786f4573e8395fe",
+              "attributes": {
+                "name": "Billabong Roadhouse",
+                "tradingName": "Billabong Roadhouse",
+                "brand": 15,
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": 195,
+                    "4": 279.9,
+                    "6": 195
+                  }
+                },
+                "address": {
+                  "street": "Lot 2 North West Coastal Hwy",
+                  "suburb": "MEADOW",
+                  "state": "WA",
+                  "postcode": null
+                },
+                "is24Hours": false,
+                "phone": null,
+                "latitude": -26.816033,
+                "longitude": 114.614261,
+                "siteFeatures": [],
+                "restrictions": null,
+                "openHours": {
+                  "Monday": "06:00-20:30",
+                  "Tuesday": "06:00-20:30",
+                  "Wednesday": "06:00-20:30",
+                  "Thursday": "06:00-20:30",
+                  "Friday": "06:00-20:30",
+                  "Saturday": "06:00-20:30",
+                  "Sunday": "06:00-20:30"
+                }
+              }
+            },
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:dc03c54421a654d3210602e20d38fc639d9fff0d8fa0b6e10f22f57d4d5601bb",
+              "attributes": {
+                "name": "Billabong Homestead Hotel Motel",
+                "tradingName": "Billabong Homestead Hotel Motel",
+                "brand": 15,
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": 268.9,
+                    "4": 282.9,
+                    "6": 288.9
+                  }
+                },
+                "address": {
+                  "street": "23253 North West Coast Hwy",
+                  "suburb": "MEADOW",
+                  "state": "WA",
+                  "postcode": null
+                },
+                "is24Hours": false,
+                "phone": null,
+                "latitude": -26.81714685,
+                "longitude": 114.6146351,
+                "siteFeatures": [],
+                "restrictions": null,
+                "openHours": {
+                  "Monday": "06:00-21:00",
+                  "Tuesday": "06:00-21:00",
+                  "Wednesday": "06:00-21:00",
+                  "Thursday": "06:00-21:00",
+                  "Friday": "06:00-21:00",
+                  "Saturday": "06:00-21:00",
+                  "Sunday": "06:00-21:00"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "Empty": {
+        "summary": "Valid selection with no LPG quotes",
+        "description": "The Costco Perth Airport LPG selection returned HTTP 200, publicationStatus empty and an empty data array. Complete response captured 2026-09-30T11:42:43.142+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?product=5&brand=32&suburb=PERTH%20AIRPORT&surrounding=no. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:43.142+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?product=5&brand=32&suburb=PERTH%20AIRPORT&surrounding=no",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "public, max-age=0, s-maxage=29",
+            "etag": "W/\"99c03240915c20c729b9f6ba868fbc56cc16d0d719d9fccb26ea3d00f2bde841\"",
+            "vary": "Accept, accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "HIT",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:00:54.545+08:00"
+          },
+          "bodySha256": "99c03240915c20c729b9f6ba868fbc56cc16d0d719d9fccb26ea3d00f2bde841"
+        },
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "product": 5,
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:54.545+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
             "publicationStatus": "empty",
             "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
             "documentation": "https://docs.fuelwatch.oss.bhodges.me",
@@ -2504,57 +3107,95 @@
           "data": []
         }
       },
-      "SingleProduct": {
-        "summary": "Illustrative unleaded-only snapshot.",
+      "InvalidProduct": {
+        "summary": "Unsupported product rejected",
+        "description": "Product 3 is not supported. This is the actual HTTP 400 JSON:API error response. Complete response captured 2026-09-30T11:42:43.711+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?product=3. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:43.711+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?product=3",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          },
+          "status": 400,
+          "responseHeaders": {
+            "content-type": "application/vnd.api+json",
+            "cache-control": "no-store",
+            "vary": "Accept, accept-encoding"
+          },
+          "bodySha256": "b82c6fa3dbb5c00d00214459657f1140d46191b3120a4d96437460394a90034c"
+        },
         "value": {
           "jsonapi": {
             "version": "1.1"
           },
-          "meta": {
-            "source": "fuelwatch.wa.gov.au",
-            "sourceDate": "2026-09-29",
-            "fetchedAt": "2026-09-29T16:00:00.000+08:00",
-            "validFrom": "2026-09-29T06:00:00.000+08:00",
-            "validUntil": "2026-09-30T06:00:00.000+08:00",
-            "publicationStatus": "available",
-            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
-            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
-            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
-            "product": 1,
-            "version": "4.30.1"
-          },
-          "data": [
+          "errors": [
             {
-              "type": "serviceStation",
-              "id": "2026-09-29:238232d151f5f92bbce32951b828cb7fe4887fdc1ac868628c7ab33d4eda4e3b",
-              "attributes": {
-                "name": "Example Station",
-                "tradingName": "Example Station",
-                "brand": 5,
-                "price": {
-                  "asAt": "2026-09-29T06:00:00.000+08:00",
-                  "products": {
-                    "1": 185.9
-                  }
-                },
-                "address": {
-                  "street": "1 Test Road",
-                  "suburb": "PERTH",
-                  "state": "WA",
-                  "postcode": null
-                },
-                "is24Hours": null,
-                "phone": null,
-                "latitude": -31.95,
-                "longitude": 115.86,
-                "siteFeatures": [
-                  1,
-                  4
-                ],
-                "restrictions": null
-              }
+              "status": "400",
+              "code": "invalid_query",
+              "detail": "Invalid or unsupported FuelWatch query."
             }
           ]
+        }
+      },
+      "Legacy": {
+        "summary": "Complete legacy response",
+        "description": "The complete product 1 legacy selection, including channel metadata, original RSS fields and parser fields. Complete response captured 2026-09-30T11:42:44.733+08:00 from GET https://fuelwatch.oss.bhodges.me/legacy?product=1&brand=32&suburb=PERTH%20AIRPORT&surrounding=no. This is a historical snapshot; repeat the request for current data.",
+        "x-capture": {
+          "capturedAt": "2026-09-30T11:42:44.733+08:00",
+          "method": "GET",
+          "url": "https://fuelwatch.oss.bhodges.me/legacy?product=1&brand=32&suburb=PERTH%20AIRPORT&surrounding=no",
+          "requestHeaders": {
+            "Accept": "application/json"
+          },
+          "status": 200,
+          "responseHeaders": {
+            "content-type": "application/json;charset=UTF-8",
+            "cache-control": "public, max-age=0, s-maxage=21599",
+            "etag": "W/\"7f5a62a4a8dde4adfc23a43c399fbbce97fba57ddc448531d5f11dfa0890778e\"",
+            "vary": "accept-encoding",
+            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-snapshot-cache": "MISS",
+            "x-fuelwatch-source-date": "2026-09-30",
+            "x-fuelwatch-fetched-at": "2026-09-30T11:42:44.907+08:00"
+          },
+          "bodySha256": "7f5a62a4a8dde4adfc23a43c399fbbce97fba57ddc448531d5f11dfa0890778e"
+        },
+        "value": {
+          "feed": {
+            "title": "FuelWatch Prices For PERTH AIRPORT",
+            "link": "https://www.fuelwatch.wa.gov.au/",
+            "description": "30/09/2026 - PERTH AIRPORT",
+            "language": "en-us",
+            "copyright": "Copyright 2025 FuelWatch. All Rights Reserved.",
+            "lastBuildDate": "Wed, 30 Sep 2026 11:42:44 +0800",
+            "ttl": "168",
+            "image": {
+              "url": "/fuelwatch/art/fuelwatch-logo.gif",
+              "title": "FuelWatch",
+              "link": "https://www.fuelwatch.wa.gov.au"
+            },
+            "items": [
+              {
+                "title": "218.7: Costco Perth Airport",
+                "description": "Address: 142 Dunreath Dr, PERTH AIRPORT, Phone: (08) 9311 4700, Site features: EFTPOS, Open Mon: 06:00-21:30, Tue: 06:00-21:30, Wed: 06:00-21:30, Thu: 06:00-21:30, Fri: 06:00-21:30, Sat: 06:00-19:30, Sun: 07:00-19:00",
+                "brand": "Costco",
+                "date": "2026-09-30",
+                "price": "218.7",
+                "trading-name": "Costco Perth Airport",
+                "location": "PERTH AIRPORT",
+                "address": "142 Dunreath Dr",
+                "phone": "+61893114700",
+                "latitude": "-31.94037700",
+                "longitude": "115.95186900",
+                "site-features": "EFTPOS, Open Mon: 06:00-21:30, Tue: 06:00-21:30, Wed: 06:00-21:30, Thu: 06:00-21:30, Fri: 06:00-21:30, Sat: 06:00-19:30, Sun: 07:00-19:00",
+                "restrictions": "Membership Required;",
+                "content": "Address: 142 Dunreath Dr, PERTH AIRPORT, Phone: (08) 9311 4700, Site features: EFTPOS, Open Mon: 06:00-21:30, Tue: 06:00-21:30, Wed: 06:00-21:30, Thu: 06:00-21:30, Fri: 06:00-21:30, Sat: 06:00-19:30, Sun: 07:00-19:00",
+                "contentSnippet": "Address: 142 Dunreath Dr, PERTH AIRPORT, Phone: (08) 9311 4700, Site features: EFTPOS, Open Mon: 06:00-21:30, Tue: 06:00-21:30, Wed: 06:00-21:30, Thu: 06:00-21:30, Fri: 06:00-21:30, Sat: 06:00-19:30, Sun: 07:00-19:00",
+                "isoDate": "2026-09-30T00:00:00.000Z"
+              }
+            ]
+          }
         }
       }
     }

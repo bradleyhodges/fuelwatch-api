@@ -20,6 +20,7 @@ import {
     type ReactNode,
 } from "react";
 import { CopyTextInline } from "@/components/copy-text-inline";
+import { type ApiExampleName, getExampleCaption, getExampleRequest } from "@/lib/api-examples";
 import { cn } from "@/lib/cn";
 import { type JsonHighlightToken, tokenizeJsonForHighlight } from "@/lib/json-highlight";
 import {
@@ -778,20 +779,22 @@ function ExampleResponse({ value }: { value: Record<string, unknown> }) {
                 <figcaption className="flex-1 truncate">Example response</figcaption>
             </div>
 
-            <pre className="m-0 p-0">
-                <CodeBlock className="shiki shiki-themes github-light github-dark m-0 overflow-x-auto rounded-none! bg-transparent! bg-white! px-6 font-mono text-[13px] text-fd-foreground leading-relaxed dark:bg-black! *:[[role=region]]:bg-white! dark:*:[[role=region]]:bg-black!">
-                    {tokens.map((token) => {
-                        const key = `${tokenOffset}:${token.text}`;
-                        tokenOffset += token.text.length;
+            <CodeBlock className="shiki shiki-themes github-light github-dark m-0 overflow-x-auto rounded-none! bg-transparent! bg-white! px-6 font-mono text-[13px] text-fd-foreground leading-relaxed dark:bg-black! *:[[role=region]]:bg-white! dark:*:[[role=region]]:bg-black!">
+                <Pre className="m-0 p-0">
+                    <code className="block!">
+                        {tokens.map((token) => {
+                            const key = `${tokenOffset}:${token.text}`;
+                            tokenOffset += token.text.length;
 
-                        return (
-                            <span className={jsonTokenClassName[token.kind]} key={key}>
-                                {token.text}
-                            </span>
-                        );
-                    })}
-                </CodeBlock>
-            </pre>
+                            return (
+                                <span className={jsonTokenClassName[token.kind]} key={key}>
+                                    {token.text}
+                                </span>
+                            );
+                        })}
+                    </code>
+                </Pre>
+            </CodeBlock>
         </figure>
     );
 }
@@ -838,9 +841,23 @@ export function RequiredHeaders() {
     );
 }
 
-/** Render canonical illustrative examples validated by the OpenAPI test suite. */
-export function ApiExample({ name }: { name: keyof typeof specification.components.examples }) {
-    return <ExampleResponse value={specification.components.examples[name].value} />;
+/** Render the complete production capture and its matching request from one OpenAPI example. */
+export function ApiExample({ name }: { name: ApiExampleName }) {
+    const example = specification.components.examples[name];
+    return (
+        <div className="not-prose my-4 min-w-0">
+            <p className="mb-1 font-semibold text-sm text-fd-foreground">{example.summary}</p>
+            <p className="mb-4 text-xs text-fd-muted-foreground leading-relaxed">
+                {getExampleCaption(name)}
+            </p>
+            <CodeBlock title="Request">
+                <Pre className="px-4">
+                    <code>{getExampleRequest(name)}</code>
+                </Pre>
+            </CodeBlock>
+            <ExampleResponse value={example.value} />
+        </div>
+    );
 }
 
 export function MethodTable({ rows, title = "Methods" }: { rows: MethodRow[]; title?: string }) {

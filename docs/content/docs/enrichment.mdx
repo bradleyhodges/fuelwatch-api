@@ -26,16 +26,7 @@ Phones are valid E.164 numbers or `null`. Australian numbers are interpreted wit
 
 Schedules use local AWST weekday names and `HH:mm-HH:mm` intervals. Split shifts are comma-separated; `Closed` means explicitly closed. A closing time before the opening time denotes the next day. `24:00` is permitted only as a closing boundary. Unknown days are omitted.
 
-```json title="Illustrative partial schedule"
-{
-  "is24Hours": false,
-  "openHours": {
-    "Monday": "06:00-12:00,13:00-20:30",
-    "Friday": "20:00-02:00",
-    "Sunday": "Closed"
-  }
-}
-```
+The production example below includes Costco Perth Airport's complete seven-day schedule, with different Saturday and Sunday hours.
 
 Confirmed 24-hour stations have `is24Hours=true` and omit `openHours`. Invalid source schedules remain in `sourceNotes.openHours` and block provider replacement. A confirmed source 24-hour schedule cannot be narrowed by Google.
 
@@ -45,9 +36,19 @@ Confirmed 24-hour stations have `is24Hours=true` and omit `openHours`. Invalid s
 
 Retain this attribution when displaying the provider's fields. See the [Google Places attribution guidance](https://developers.google.com/maps/documentation/places/web-service/policies).
 
+In this real capture, Google contributed `address.postcode` and `siteFeatures`. The phone and opening hours are present but are not listed as provider contributions. `attributions` was an empty array in the response; the `provider`, `placeId` and `googleMapsUri` fields are preserved.
+
+<ApiExample name="Expanded" />
+
 Provider lookups run independently of price refreshes. Missing configuration, exhausted budget, no confident match, expired data or an unavailable enrichment database can all produce FuelWatch-only responses. A `200` does not imply that every station has enrichment.
 
 Provider data can be served after its refresh deadline with `stale=true`, but never at 30 days old or older. At the configured 30-day refresh interval there is no stale grace period. Cached rendered responses can delay the appearance of newly stored enrichment, subject to their own bounded lifetime.
+
+## A response without enrichment
+
+This exact-suburb selection returned Billabong Roadhouse and Billabong Homestead Hotel Motel. Both records are included in full. They have FuelWatch opening hours, but no `enrichment` object, no known postcode or phone, empty feature arrays and null restrictions. Consumers must accept this alongside enriched stations.
+
+<ApiExample name="FuelWatchOnly" />
 
 ## Unknown source text
 

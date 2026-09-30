@@ -24,38 +24,18 @@ description: Compatibility behavior for existing RSS-shaped JSON consumers.
   </div>
   <CodeRail>
 
-```bash title="Request"
-curl 'https://fuelwatch.oss.bhodges.me/legacy?product=1'
-```
-
-```json title="Illustrative excerpt"
-{
-  "feed": {
-    "items": [{
-      "trading-name": "Example Station",
-      "brand": "BP",
-      "price": "185.9",
-      "date": "2026-09-29",
-      "address": "1 Test Road",
-      "location": "PERTH",
-      "latitude": "-31.95",
-      "longitude": "115.86",
-      "phone": null
-    }]
-  }
-}
-```
+<ApiExample name="Legacy" />
 
   </CodeRail>
 </ReferenceGrid>
 
-Channel/parser fields can accompany `items`; this excerpt is not an exhaustive RSS field list. Source descriptions/features may contain combined free text. Source/parser field presence is retained rather than expanded into the normalized DTO. Phone values are normalized to E.164 or null.
+This is the full production response, including channel metadata and parser fields. Source descriptions/features may contain combined free text. Source/parser field presence is retained rather than expanded into the normalized DTO. Phone values are normalized to E.164 or null. The legacy parser's `isoDate` remains in UTC, unlike the normalized `/v1` timestamps.
 
 The six filters and their aliases work here too, but every query uses source-filtered selection and the 24-combination limit. Multi-product results contain separate station/product items with a numeric `product` marker; a single-product response omits that marker.
 
 The content type is `application/json;charset=UTF-8`. This route does not apply `/v1` JSON:API media negotiation. Success metadata is not the `/v1` `meta` object; source-date/fetch headers remain available. Caching, ETags and HEAD work with a separate representation cache.
 
-Errors use `{"error":{"code":"invalid_query","message":"Unsupported FuelWatch query."}}` and `no-store`. Do not deserialize them as JSON:API errors.
+Errors contain an `error` object with `code` and `message` and use `no-store`. Do not deserialize them as JSON:API errors.
 
 ## Migration to /v1
 

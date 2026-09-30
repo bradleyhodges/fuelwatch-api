@@ -23,17 +23,20 @@ description: GET /v1 returns one resource per station with all selected fuel pri
   </div>
   <CodeRail>
 
-```bash title="Request"
-curl 'https://fuelwatch.oss.bhodges.me/v1?product=1,2' \
-  -H 'Accept: application/vnd.api+json'
-```
-
 <ApiExample name="Compact" />
 
   </CodeRail>
 </ReferenceGrid>
 
 All six filters also accept `filter[...]` names. Query parsing, aliases and combination limits are described in [Filtering](/docs/filtering).
+
+The example uses brand `32`, suburb `PERTH AIRPORT` and `surrounding=no` to obtain a small, complete response. No station records or attributes were removed. Omitting `product` selects all seven fuels; Costco Perth Airport returned prices for products `1`, `6` and `11` in this capture.
+
+## Expanded response with enrichment
+
+The same selection with `expand=all` includes named reference objects, opening hours and Google Maps provenance. `enrichment.fields` identifies the provider's contribution; the phone number and opening hours are also present, but were supplied by FuelWatch in this example. See [source priority and attribution](/docs/enrichment).
+
+<ApiExample name="Expanded" />
 
 ## Collection behavior
 

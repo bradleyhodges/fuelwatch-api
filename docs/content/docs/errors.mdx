@@ -5,16 +5,9 @@ description: Recognize API failures, retry safely and preserve valid prices.
 
 `/v1` errors use JSON:API documents with an `errors` array and no `data`. HTTP status and `errors[].status` agree; the latter is a string. Branch on `code`, not the human-readable `detail`.
 
-```json title="Invalid query"
-{
-  "jsonapi": {"version": "1.1"},
-  "errors": [{
-    "status": "400",
-    "code": "invalid_query",
-    "detail": "Unsupported FuelWatch query."
-  }]
-}
-```
+Product `3` does not exist. The following request was made against production and returned this complete error document.
+
+<ApiExample name="InvalidProduct" />
 
 All error responses use `Cache-Control: no-store`. A `HEAD` error has the same status with no body. Browser preflight failures and static asset responses can also be bodyless; do not assume every HTTP failure contains JSON.
 
@@ -46,6 +39,10 @@ The Worker already bounds upstream attempts and deadlines. Aggressive client loo
 ## Empty is not an error
 
 A valid empty selection returns `200` with `data: []`. Inspect [publicationStatus](/docs/price-periods#tomorrows-publication) to distinguish an expected unpublished tomorrow feed from other empty results.
+
+This request for LPG at Costco Perth Airport returned no quotes at capture time. It is a successful empty selection, not an upstream failure.
+
+<ApiExample name="Empty" />
 
 Multi-product failures are atomic: if any required source component fails, the response fails instead of returning a partial success document. A station legitimately omitting one requested product is different and remains valid.
 

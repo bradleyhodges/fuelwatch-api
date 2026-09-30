@@ -1,5 +1,6 @@
 import type { StringifyOptions } from "fumadocs-core/mdx-plugins/remark-structure";
 import specification from "../../public/openapi.json";
+import { getExampleCaption, getExampleRequest } from "./api-examples";
 import { getFieldEnumValues, getReferenceShape, type ReferenceShapeField } from "./reference-types";
 
 type MdxNode = Extract<
@@ -102,8 +103,9 @@ export function stringifyReference(
         const examples = specification.components.examples;
         if (typeof name !== "string" || !Object.hasOwn(examples, name))
             throw new Error(`Unknown API example: ${String(name)}`);
-        const example = examples[name as keyof typeof examples];
-        return `\`\`\`json\n${JSON.stringify(example.value, null, 2)}\n\`\`\``;
+        const exampleName = name as keyof typeof examples;
+        const example = examples[exampleName];
+        return `**${example.summary}**\n\n${getExampleCaption(exampleName)}\n\n\`\`\`bash\n${getExampleRequest(exampleName)}\n\`\`\`\n\n\`\`\`json\n${JSON.stringify(example.value, null, 2)}\n\`\`\``;
     }
     if (node.name === "FieldTable") {
         const fields = attribute(node, "fields");

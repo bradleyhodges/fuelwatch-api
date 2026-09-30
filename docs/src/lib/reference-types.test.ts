@@ -88,7 +88,7 @@ describe("HTTP schema reference", () => {
         ]);
         expect(example?.station).toMatchObject({
             type: "serviceStation",
-            attributes: { brand: 5 },
+            attributes: { brand: 32, name: "Costco Perth Airport" },
         });
     });
 });
