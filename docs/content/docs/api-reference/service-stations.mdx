@@ -18,7 +18,7 @@ description: GET /v1 returns one resource per station with all selected fuel pri
       {name: "suburb", type: "string[]", description: "Comma-separated suburb names. Pair with surrounding=no for exact suburbs."},
       {name: "day", type: "string", defaultValue: "today", description: "yesterday, today, tomorrow or DD/MM/YYYY within those three Perth dates."},
       {name: "surrounding", type: "string", allowedValues: ["yes", "no"], description: "Omission uses source behavior; no gives exact suburb matching."},
-      {name: "expand", type: "string[]", description: "brand, siteFeatures, restrictions or all. Omitted references are codes."}
+      {name: "expand", type: "string[]", allowedValues: ["brand", "siteFeatures", "restrictions", "product", "all"], description: "Select [expansion fields](/docs/expansion). product adds names to price values; all expands all four fields. Defaults to numeric codes and prices."}
     ]} />
   </div>
   <CodeRail>
@@ -34,13 +34,13 @@ The example uses brand `32`, suburb `PERTH AIRPORT` and `surrounding=no` to obta
 
 ## Expanded response with enrichment
 
-The same selection with `expand=all` includes named reference objects, opening hours and Google Maps provenance. `enrichment.fields` identifies the provider's contribution; the phone number and opening hours are also present, but were supplied by FuelWatch in this example. See [source priority and attribution](/docs/enrichment).
+The same selection with `expand=brand,siteFeatures,restrictions` includes named station references, opening hours and Google Maps provenance. `enrichment.fields` identifies the provider's contribution; the phone number and opening hours are also present, but were supplied by FuelWatch in this example. See [source priority and attribution](/docs/enrichment). Add `product` to also expand price values, or use `expand=all` for all four fields.
 
 <ApiExample name="Expanded" />
 
 ## Collection behavior
 
-The response contains `jsonapi`, `meta` and `data`. A station selling multiple selected fuels appears once. `price.products` contains only its available selected products. A single-product query uses the same grouped shape.
+The response contains `jsonapi`, `meta` and `data`. A station selling multiple selected fuels appears once. `price.products` contains only its available selected products. A single-product query uses the same grouped shape. Each value is numeric cents per litre by default, or `{ name, amount }` with [product expansion](/docs/expansion#expand-product-prices).
 
 Resource `type` is always `serviceStation`. The `id` combines `sourceDate` with a SHA-256 digest of normalized station identity. It is stable across product selections, expansion, price corrections and enrichment changes, but not across source dates. Treat it as opaque; there is no `/v1/{id}` endpoint. A moved or otherwise reidentified station can receive a different identity.
 

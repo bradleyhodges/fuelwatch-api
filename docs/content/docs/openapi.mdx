@@ -32,14 +32,14 @@ curl --fail-with-body \
 - JSON:API success/error envelopes and the separate legacy contract.
 - Bodyless `HEAD`, `304` and preflight responses.
 
-The schema tables in this site are derived from this file. Response examples are complete, unedited JSON documents captured from the production API on 30 September 2026. Prices and facility information are historical snapshots; the request shown beside each example can be repeated for current data.
+The schema tables in this site are derived from this file. Captured response examples are complete, unedited JSON documents from the production API on 30 September 2026. The product-expansion example is separately labelled as a representation derived from that real data. Prices and facility information are historical snapshots; the request shown beside each example can be repeated for current data.
 
 ## Captured examples
 
 | OpenAPI example | What it demonstrates |
 | --- | --- |
 | `Compact` | Costco Perth Airport, all products, compact codes, hours and enrichment. |
-| `Expanded` | The same selection with all reference objects expanded. |
+| `Expanded` | The same selection with brand, features and restrictions expanded; numeric prices retained. |
 | `BrandExpanded` | Selective brand expansion with numeric feature and restriction codes. |
 | `FeaturesExpanded` | Feature and restriction objects with a numeric brand code. |
 | `SingleProduct` | Product 1 only, with `meta.product` and enrichment. |
@@ -48,7 +48,9 @@ The schema tables in this site are derived from this file. Response examples are
 | `InvalidProduct` | The real HTTP 400 response to unsupported product 3. |
 | `Legacy` | Full legacy channel metadata and RSS/parser station fields. |
 
-Each Example Object keeps its body in `value`, with the exact GET URL, request headers, capture timestamp in AWST, HTTP status and selected response headers in `x-capture`. Its `bodySha256` checks the UTF-8 `JSON.stringify(value)` representation, independent of indentation. These are documentation annotations outside the API body.
+Each captured Example Object keeps its body in `value`, with the exact GET URL, request headers, capture timestamp in AWST, HTTP status and selected response headers in `x-capture`. Its `bodySha256` checks the UTF-8 `JSON.stringify(value)` representation, independent of indentation. These are documentation annotations outside the API body.
+
+`ProductExpanded` demonstrates `expand=product` using the complete `Compact` capture. Only product price values are changed to `{ name, amount }`; all real prices and enrichment remain intact. Its `x-derived-from` annotation identifies that source and the request for the new representation. It does not claim an HTTP capture or status for this derived response.
 
 Examples are attached to their corresponding success/error media types and validated against the appropriate success, error or legacy schema. The same examples power the visible docs, copied Markdown and search content. Docs builds and tests do not make live API requests.
 

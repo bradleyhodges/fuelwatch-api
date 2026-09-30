@@ -47,6 +47,40 @@ describe("published HTTP contract", () => {
             expect(validateExample(example.value), JSON.stringify(validateExample.errors)).toBe(
                 true,
             );
+            if (!("x-capture" in example)) {
+                expect(name).toBe("ProductExpanded");
+                const source = specification.components.examples.Compact;
+                expect(example["x-derived-from"].example).toBe("#/components/examples/Compact");
+                expect(example["x-derived-from"].sourceCapturedAt).toBe(
+                    source["x-capture"].capturedAt,
+                );
+                expect(example.value).toEqual({
+                    ...source.value,
+                    data: source.value.data.map((station) => ({
+                        ...station,
+                        attributes: {
+                            ...station.attributes,
+                            price: {
+                                ...station.attributes.price,
+                                products: Object.fromEntries(
+                                    Object.entries(station.attributes.price.products).map(
+                                        ([code, amount]) => [
+                                            code,
+                                            {
+                                                name: codes.products.find(
+                                                    (product) => String(product.code) === code,
+                                                )?.name,
+                                                amount,
+                                            },
+                                        ],
+                                    ),
+                                ),
+                            },
+                        },
+                    })),
+                });
+                return;
+            }
             const capture = example["x-capture"];
             expect(new URL(capture.url).origin).toBe("https://fuelwatch.oss.bhodges.me");
             expect(capture.capturedAt).toMatch(/T\d{2}:\d{2}:\d{2}\.\d{3}\+08:00$/);
@@ -123,6 +157,40 @@ describe("published HTTP contract", () => {
         expect(
             specification.components.schemas.ApiError.properties.code.enum.slice().sort(),
         ).toEqual([...errors.split(";")[0].matchAll(/"([^"]+)"/g)].map((match) => match[1]).sort());
+    });
+    it("allows uniform expanded product prices and rejects mixed or malformed price maps", () => {
+        const compact = specification.components.examples.Compact.value;
+        const withProducts = (products: unknown) => ({
+            ...compact,
+            data: [
+                {
+                    ...compact.data[0],
+                    attributes: {
+                        ...compact.data[0].attributes,
+                        price: { ...compact.data[0].attributes.price, products },
+                    },
+                },
+            ],
+        });
+        const expanded = Object.fromEntries(
+            codes.products.map(({ code, name }) => [code, { name, amount: 212.9 }]),
+        );
+        expect(validate(withProducts(expanded)), JSON.stringify(validate.errors)).toBe(true);
+        expect(validate(withProducts({ "1": expanded[1] }))).toBe(true);
+        for (const products of [
+            {},
+            { "1": 212.9, "4": expanded[4] },
+            { "3": expanded[1] },
+            { "1": { amount: 212.9 } },
+            { "1": { name: "Unleaded Petrol" } },
+            { "1": { name: "Unleaded Petrol", amount: "212.9" } },
+            { "1": { name: "Unleaded Petrol", amount: 0 } },
+            { "1": { name: "Unleaded Petrol", amount: 10001 } },
+        ])
+            expect(validate(withProducts(products))).toBe(false);
+        expect(specification.components.parameters.expand.schema.items.examples).toContain(
+            "product",
+        );
     });
 });
 

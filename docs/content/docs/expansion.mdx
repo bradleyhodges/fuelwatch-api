@@ -3,16 +3,17 @@ title: Reference expansion
 description: Keep references compact or expand selected fields into named objects.
 ---
 
-By default, `brand` is one integer, `siteFeatures` is an array of integers, and `restrictions` is an array of integers or `null`. See the complete [code tables](/docs/api-reference/codes).
+By default, `brand` is one integer, `siteFeatures` is an array of integers, and `restrictions` is an array of integers or `null`. Each `price.products` value is a number in Australian cents per litre. Expansion adds names to selected fields. See the complete [code tables](/docs/api-reference/codes).
 
 ## Choose fields
 
-| Request | Brand | Features | Restrictions |
-| --- | --- | --- | --- |
-| No `expand` | Code | Codes | Codes or null |
-| `expand=brand` | Object | Codes | Codes or null |
-| `expand=siteFeatures,restrictions` | Code | Objects | Objects or null |
-| `expand=all` | Object | Objects | Objects or null |
+| Request | Brand | Features | Restrictions | Product prices |
+| --- | --- | --- | --- | --- |
+| No `expand` | Code | Codes | Codes or null | Numbers |
+| `expand=brand` | Object | Codes | Codes or null | Numbers |
+| `expand=siteFeatures,restrictions` | Code | Objects | Objects or null | Numbers |
+| `expand=product` | Code | Codes | Codes or null | Named amounts |
+| `expand=all` | Object | Objects | Objects or null | Named amounts |
 
 Names and values are case-insensitive: `ExPaNd=BRAND,siteFEATURES` works. Whitespace is trimmed and repeated members deduplicated. `all,brand` is equivalent to `all`. An empty value, unknown field, empty member or repeated `expand` parameter returns `400`. `filter[expand]` is unsupported.
 
@@ -42,7 +43,32 @@ Names and values are case-insensitive: `ExPaNd=BRAND,siteFEATURES` works. Whites
   </CodeRail>
 </ReferenceGrid>
 
-Both examples are complete responses captured for the same Costco Perth Airport selection. Compare them with the [compact and fully expanded responses](/docs/api-reference/service-stations). Expansion changes only the selected reference representations; it does not remove the price, address, opening hours or enrichment information.
+Both examples are complete responses captured for the same Costco Perth Airport selection. Compare them with the [compact and expanded station responses](/docs/api-reference/service-stations). Expansion changes only the selected reference representations; it does not remove the price, address, opening hours or enrichment information.
+
+## Expand product prices
+
+Use the singular `expand=product` to turn each price value into `{ name, amount }`. The outer key remains the [product code](/docs/api-reference/codes#products), and `amount` remains Australian cents per litre. For example, `218.7` means AUD 2.187/L in both representations. Names come from the product code table, including `Unleaded Petrol` for code `1`.
+
+```json title="Expanded price excerpt"
+{
+  "price": {
+    "asAt": "2026-09-30T06:00:00.000+08:00",
+    "products": {
+      "1": { "name": "Unleaded Petrol", "amount": 218.7 },
+      "6": { "name": "Premium Unleaded 98", "amount": 242.7 },
+      "11": { "name": "Brand Diesel", "amount": 264.7 }
+    }
+  }
+}
+```
+
+The excerpt and complete example below preserve the real prices and station details in the compact Costco production capture. Only the product representation is derived locally; this is labelled separately from captured HTTP responses.
+
+<ApiExample name="ProductExpanded" />
+
+The `product` filter chooses which fuels to return; `expand=product` only changes how those selected prices are represented. Combine them as `?product=1,4&expand=product`, or expand a brand too with `?product=1,4&expand=brand,product`. A station still omits unavailable products. Expansion never adds missing prices or changes `price.asAt`.
+
+`expand=all` includes product prices as well as brand, features and restrictions. Read `products["1"].amount` for expanded prices. To retain numeric prices while naming station references, use `expand=brand,siteFeatures,restrictions`.
 
 ## Missing and unknown information
 
@@ -56,5 +82,5 @@ Unrecognized source feature/restriction text is retained in `sourceNotes`; it ne
 
 Expansion changes the response body, ETag and rendered cache entry. It preserves station IDs, selected products and original fetch time. Equivalent expansion sets share a cache entry. It does not perform extra RSS or Google lookups and does not create separate D1 price snapshots.
 
-Expansion applies only to `/v1`. `/legacy` retains string fields and rejects `expand`. There is no expansion for price products, addresses or enrichment: those fields retain their documented shape.
+Expansion applies only to `/v1`. `/legacy` retains string fields and rejects `expand`. Addresses and enrichment retain their documented shape.
 

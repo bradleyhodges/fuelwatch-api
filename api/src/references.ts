@@ -8,6 +8,7 @@ export const EXPANDABLE_FIELDS = [
     "brand",
     "siteFeatures",
     "restrictions",
+    "product",
 ] as const;
 export type ExpandableField = (typeof EXPANDABLE_FIELDS)[number];
 export interface Reference {
@@ -49,7 +50,7 @@ export function parseExpansion(params: URLSearchParams): {
         throw new ApiError(
             400,
             "invalid_query",
-            "Expand brand, siteFeatures, restrictions, or all.",
+            "Expand brand, siteFeatures, restrictions, product, or all.",
         );
     };
     if (params.toString().length > 1024) invalid();

@@ -1,6 +1,6 @@
 import { ApiError } from "./errors";
 import type { FeedMetadata } from "./feed";
-import type { FuelWatchProductId } from "./fuelwatch";
+import { FUELWATCH_PRODUCTS, type FuelWatchProductId } from "./fuelwatch";
 import {
     type CodedStation,
     codeStation,
@@ -16,6 +16,12 @@ import {
 /** JSON:API forbids adding charset to this media type. No extensions or profiles are applied. */
 export const JSON_API_MEDIA_TYPE = "application/vnd.api+json";
 
+/** A selected product's display name and unchanged price in Australian cents per litre. */
+export interface ExpandedProductPrice {
+    name: string;
+    amount: number;
+}
+
 /** One station/date identity, independent of the products selected by the caller. */
 export interface ServiceStationResource {
     type: "serviceStation";
@@ -23,7 +29,10 @@ export interface ServiceStationResource {
     attributes: Omit<CodedStation, "price"> & {
         price: {
             asAt: string;
-            products: Partial<Record<FuelWatchProductId, number>>;
+            /** All values use the same representation; unavailable products are omitted. */
+            products: Partial<
+                Record<FuelWatchProductId, number | ExpandedProductPrice>
+            >;
         };
     };
 }
@@ -37,7 +46,8 @@ export interface FuelPriceDocument {
 
 /**
  * Group all selected products into one JSON:API serviceStation resource per station/date.
- * @param expand References to populate with names; omitted references remain numeric wire codes.
+ * @param expand References to populate with names. Product expansion wraps each numeric price
+ * in { name, amount }; other unexpanded references remain numeric wire codes.
  * @remarks Hash each station only once per document, even when several requested fuels share it.
  * Names, brands, prices and enrichment updates do not change resource IDs. The existing integration
  * continues deriving its station selector separately so saved user selections survive this API change.
@@ -50,6 +60,7 @@ export async function jsonApiDocument(
     expand: readonly ExpandableField[] = [],
 ): Promise<FuelPriceDocument> {
     const stations = new Map<string, ServiceStationResource["attributes"]>();
+    const expandProducts = expand.includes("product");
     // Product order, rather than asynchronous fetch completion, chooses the station's source fields.
     for (const item of [...feed.items].sort((a, b) => a.product - b.product)) {
         const key = stationKey(item);
@@ -65,7 +76,11 @@ export async function jsonApiDocument(
             };
             stations.set(key, attributes);
         }
-        attributes.price.products[item.product] = Number(item.price);
+        // Expand only at the response boundary so every variant shares the same source snapshots.
+        const amount = Number(item.price);
+        attributes.price.products[item.product] = expandProducts
+            ? { name: FUELWATCH_PRODUCTS[item.product], amount }
+            : amount;
     }
     const data = await Promise.all(
         [...stations].map(async ([key, attributes]) => {

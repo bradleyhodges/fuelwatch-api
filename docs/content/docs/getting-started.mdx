@@ -23,7 +23,7 @@ description: Make your first request and read a station's published prices.
 
 ## Read the document
 
-The collection is `data`. Station fields live under `attributes`, and `attributes.price.products` maps product IDs to cents per litre. JSON object keys are strings: use `products["1"]`, not a property named `unleaded`.
+The collection is `data`. Station fields live under `attributes`, and `attributes.price.products` maps product IDs to cents per litre by default. JSON object keys are strings: use `products["1"]`, not a property named `unleaded`. With [`expand=product` or `expand=all`](/docs/expansion#expand-product-prices), each value becomes `{ name, amount }`; read `products["1"].amount` for the price.
 
 The response above was captured from production, with every field retained. It includes a real phone number, opening hours, a membership restriction and enrichment provenance. Its dates and prices are a historical snapshot; rerunning the command returns the current selection.
 

@@ -948,61 +948,138 @@
             ]
           },
           "products": {
-            "type": "object",
-            "properties": {
-              "1": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "Unleaded Petrol in Australian cents per litre."
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompactProductPrices"
               },
-              "2": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "Premium Unleaded 95 in Australian cents per litre."
-              },
-              "4": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "Diesel in Australian cents per litre."
-              },
-              "5": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "LPG in Australian cents per litre."
-              },
-              "6": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "Premium Unleaded 98 in Australian cents per litre."
-              },
-              "10": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "E85 in Australian cents per litre."
-              },
-              "11": {
-                "type": "number",
-                "exclusiveMinimum": 0,
-                "maximum": 10000,
-                "description": "Brand Diesel in Australian cents per litre."
+              {
+                "$ref": "#/components/schemas/ExpandedProductPrices"
               }
-            },
-            "required": [],
-            "minProperties": 1,
-            "additionalProperties": false,
-            "description": "Selected product IDs as JSON string keys. Missing products are unavailable, never zero. 195.1 cents/L means AUD 1.951/L."
+            ],
+            "description": "Numeric cents per litre by default; { name, amount } values with expand=product or expand=all. Each map uses one representation. Product keys, selected fuels and units are unchanged."
           }
         },
         "required": [
           "asAt",
           "products"
         ]
+      },
+      "CompactProductPrices": {
+        "type": "object",
+        "properties": {
+          "1": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Unleaded Petrol in Australian cents per litre."
+          },
+          "2": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Premium Unleaded 95 in Australian cents per litre."
+          },
+          "4": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Diesel in Australian cents per litre."
+          },
+          "5": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "LPG in Australian cents per litre."
+          },
+          "6": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Premium Unleaded 98 in Australian cents per litre."
+          },
+          "10": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "E85 in Australian cents per litre."
+          },
+          "11": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Brand Diesel in Australian cents per litre."
+          }
+        },
+        "required": [],
+        "minProperties": 1,
+        "additionalProperties": false,
+        "description": "Default product map: available selected [product codes](/docs/api-reference/codes#products) as JSON string keys, with numeric Australian cents per litre. Missing products are unavailable, never zero."
+      },
+      "ExpandedProductPrices": {
+        "type": "object",
+        "description": "With expand=product or expand=all, every available selected product maps to a named price. Keys remain [product codes](/docs/api-reference/codes#products); unavailable products are omitted.",
+        "properties": {
+          "1": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "Unleaded Petrol"
+          },
+          "2": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "Premium Unleaded 95"
+          },
+          "4": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "Diesel"
+          },
+          "5": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "LPG"
+          },
+          "6": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "Premium Unleaded 98"
+          },
+          "10": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "E85"
+          },
+          "11": {
+            "$ref": "#/components/schemas/ExpandedProductPrice",
+            "description": "Brand Diesel"
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "ExpandedProductPrice": {
+        "type": "object",
+        "description": "Product name and price when product is expanded. The product code remains the containing map key.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name from the [product code table](/docs/api-reference/codes#products).",
+            "enum": [
+              "Unleaded Petrol",
+              "Premium Unleaded 95",
+              "Diesel",
+              "LPG",
+              "Premium Unleaded 98",
+              "E85",
+              "Brand Diesel"
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10000,
+            "description": "Australian cents per litre, unchanged by expansion. 218.7 means AUD 2.187/L."
+          }
+        },
+        "required": [
+          "name",
+          "amount"
+        ],
+        "additionalProperties": false
       },
       "OpeningHours": {
         "type": "object",
@@ -2019,11 +2096,18 @@
         "schema": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "brand",
+              "siteFeatures",
+              "restrictions",
+              "product",
+              "all"
+            ]
           },
           "minItems": 1
         },
-        "description": "Case-insensitive comma-separated brand, siteFeatures, restrictions, or all. Omitted means numeric codes. Trim and deduplicate members; all plus valid members is allowed. Unknown/empty members and repeated parameters return 400. This representation control never reaches RSS or D1 keys.",
+        "description": "Case-insensitive comma-separated brand, siteFeatures, restrictions, product, or all. Product expansion changes each price.products value to { name, amount }, keeping product-code keys and amounts in cents per litre. all expands all four fields. Omission keeps numeric codes and prices. Trim and deduplicate members; all plus valid members is allowed. Unknown/empty members and repeated parameters return 400. This representation control never reaches RSS or D1 keys.",
         "example": [
           "brand",
           "siteFeatures"
@@ -2094,6 +2178,9 @@
               },
               "Empty": {
                 "$ref": "#/components/examples/Empty"
+              },
+              "ProductExpanded": {
+                "$ref": "#/components/examples/ProductExpanded"
               }
             }
           }
@@ -2483,22 +2570,22 @@
         }
       },
       "Expanded": {
-        "summary": "All references expanded, with enrichment",
-        "description": "The same Costco Perth Airport selection with named brand, site features and membership restriction; all enrichment and attribution fields are preserved. Complete response captured 2026-09-30T11:42:42.891+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=all. This is a historical snapshot; repeat the request for current data.",
+        "summary": "Station references expanded, with enrichment",
+        "description": "Costco Perth Airport with named brand, site features and membership restriction. Price values stay numeric because product is not expanded. Complete unedited response captured 2026-09-30T12:25:18.698+08:00 from GET https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=brand,siteFeatures,restrictions. Historical snapshot; repeat the request for current data.",
         "x-capture": {
-          "capturedAt": "2026-09-30T11:42:42.891+08:00",
+          "capturedAt": "2026-09-30T12:25:18.698+08:00",
           "method": "GET",
-          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=all",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=brand,siteFeatures,restrictions",
           "requestHeaders": {
             "Accept": "application/vnd.api+json"
           },
           "status": 200,
           "responseHeaders": {
             "content-type": "application/vnd.api+json",
-            "cache-control": "public, max-age=0, s-maxage=19089",
+            "cache-control": "public, max-age=0, s-maxage=16532",
             "etag": "W/\"edf6d29fe9bffafd50c4b69dbaf03cd6191a8c4b16a082850090e5e8187b7fa9\"",
             "vary": "Accept, accept-encoding",
-            "x-fuelwatch-cache": "MISS",
+            "x-fuelwatch-cache": "HIT",
             "x-fuelwatch-snapshot-cache": "HIT",
             "x-fuelwatch-source-date": "2026-09-30",
             "x-fuelwatch-fetched-at": "2026-09-30T11:00:52.278+08:00"
@@ -3196,6 +3283,111 @@
               }
             ]
           }
+        }
+      },
+      "ProductExpanded": {
+        "summary": "Product names with unchanged prices and enrichment",
+        "description": "Complete Costco Perth Airport document derived from the Compact production capture. Only price.products values are expanded locally with the documented product names; all captured prices, station details and enrichment are preserved. This demonstrates the new representation and is not a captured production response.",
+        "x-derived-from": {
+          "example": "#/components/examples/Compact",
+          "sourceCapturedAt": "2026-09-30T11:42:42.955+08:00",
+          "url": "https://fuelwatch.oss.bhodges.me/v1?brand=32&suburb=PERTH%20AIRPORT&surrounding=no&expand=product",
+          "requestHeaders": {
+            "Accept": "application/vnd.api+json"
+          }
+        },
+        "value": {
+          "jsonapi": {
+            "version": "1.1"
+          },
+          "meta": {
+            "source": "fuelwatch.wa.gov.au",
+            "products": [
+              1,
+              2,
+              4,
+              5,
+              6,
+              10,
+              11
+            ],
+            "sourceDate": "2026-09-30",
+            "fetchedAt": "2026-09-30T11:00:52.278+08:00",
+            "validFrom": "2026-09-30T06:00:00.000+08:00",
+            "validUntil": "2026-10-01T06:00:00.000+08:00",
+            "publicationStatus": "available",
+            "copyright": "Copyright 2025 Department of Local Government, Industry Regulation and Safety (source data); Copyright 2026 Bradley Hodges (api). All rights reserved.",
+            "documentation": "https://docs.fuelwatch.oss.bhodges.me",
+            "issues": "https://github.com/bradleyhodges/fuelwatch-api/issues",
+            "version": "4.30.1"
+          },
+          "data": [
+            {
+              "type": "serviceStation",
+              "id": "2026-09-30:dca78516464d85042c12eab0fd45d71665adc32b578908bc8444f29201d02ba7",
+              "attributes": {
+                "name": "Costco Perth Airport",
+                "tradingName": "Costco Perth Airport",
+                "brand": 32,
+                "price": {
+                  "asAt": "2026-09-30T06:00:00.000+08:00",
+                  "products": {
+                    "1": {
+                      "name": "Unleaded Petrol",
+                      "amount": 218.7
+                    },
+                    "6": {
+                      "name": "Premium Unleaded 98",
+                      "amount": 242.7
+                    },
+                    "11": {
+                      "name": "Brand Diesel",
+                      "amount": 264.7
+                    }
+                  }
+                },
+                "address": {
+                  "street": "142 Dunreath Dr",
+                  "suburb": "PERTH AIRPORT",
+                  "state": "WA",
+                  "postcode": "6105"
+                },
+                "is24Hours": false,
+                "phone": "+61893114700",
+                "latitude": -31.940377,
+                "longitude": 115.951869,
+                "siteFeatures": [
+                  8,
+                  1,
+                  2
+                ],
+                "restrictions": [
+                  3
+                ],
+                "enrichment": {
+                  "provider": "Google Maps",
+                  "placeId": "ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "fetchedAt": "2026-09-29T18:36:18.295+08:00",
+                  "stale": false,
+                  "fields": [
+                    "address.postcode",
+                    "siteFeatures"
+                  ],
+                  "googleMapsUri": "https://www.google.com/maps/search/?api=1&query=Costco%20Perth%20Airport&query_place_id=ChIJw1UkrSm5MioRiEMGrwrsOUI",
+                  "attributions": []
+                },
+                "openHours": {
+                  "Monday": "06:00-21:30",
+                  "Tuesday": "06:00-21:30",
+                  "Wednesday": "06:00-21:30",
+                  "Thursday": "06:00-21:30",
+                  "Friday": "06:00-21:30",
+                  "Saturday": "06:00-19:30",
+                  "Sunday": "07:00-19:00"
+                }
+              }
+            }
+          ]
         }
       }
     }

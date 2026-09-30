@@ -69,7 +69,7 @@ describe("FuelWatch reference components", () => {
         expect(html).toContain("ChIJw1UkrSm5MioRiEMGrwrsOUI");
         expect(html).toContain("openHours");
         expect(html).toContain("Membership Required");
-        expect(html).toContain("surrounding=no&amp;expand=all");
+        expect(html).toContain("surrounding=no&amp;expand=brand,siteFeatures,restrictions");
         expect(html).toContain("Captured");
         expect(html).toContain("+08:00");
         expect(html).toContain("HTTP 200");
@@ -82,5 +82,14 @@ describe("FuelWatch reference components", () => {
         const html = renderToStaticMarkup(<RequiredHeaders />);
         expect(html).toContain("application/vnd.api+json");
         expect(html).not.toContain("Authorization");
+    });
+    it("labels product expansion as derived from real data without claiming a captured HTTP response", () => {
+        const html = renderToStaticMarkup(<ApiExample name="ProductExpanded" />);
+        expect(html).toContain("expand=product");
+        expect(html).toContain("Unleaded Petrol");
+        expect(html).toContain("218.7");
+        expect(html).toContain("enrichment");
+        expect(html).toContain("Derived from production data");
+        expect(html).not.toContain("HTTP 200");
     });
 });

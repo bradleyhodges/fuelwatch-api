@@ -74,7 +74,7 @@ test("expansion canonicalizes equivalent sets only in rendered cache keys", () =
     );
     const second = api.parseExpansion(
         new URLSearchParams(
-            "product=1&EXPAND=RESTRICTIONS,brand,siteFEATURES,brand",
+            "product=1&EXPAND=RESTRICTIONS,brand,siteFEATURES,PRODUCT,brand",
         ),
     );
     assert.deepEqual(first.expand, second.expand);
@@ -90,6 +90,17 @@ test("expansion canonicalizes equivalent sets only in rendered cache keys", () =
         api.cacheKey(url, compact).url,
     );
     assert.equal(compact.canonical.has("Expand"), false);
+    assert.deepEqual(
+        api.parseExpansion(new URLSearchParams("expand=Product,PRODUCT"))
+            .expand,
+        ["product"],
+    );
+    // The former expand=all representation must not mask newly expanded prices.
+    assert.notEqual(
+        api.cacheKey(url, compact, first.expand).url,
+        api.cacheKey(url, compact, ["brand", "siteFeatures", "restrictions"])
+            .url,
+    );
 });
 
 test("response freshness stops at provider refresh and hard age boundaries", () => {

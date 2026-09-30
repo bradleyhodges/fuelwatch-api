@@ -79,6 +79,7 @@ test("codes are the default and expansion changes representation without fetchin
     assert.equal(attributes.brand, 5);
     assert.deepEqual(attributes.siteFeatures, [4, 5]);
     assert.deepEqual(attributes.restrictions, [3]);
+    assert.deepEqual(attributes.price.products, { 1: 185.9 });
     const expandedResponse = await fetchWorker("/v1?product=1&expand=all");
     const expanded = await expandedResponse.json();
     assert.deepEqual(expanded.data[0].attributes.brand, {
@@ -93,6 +94,9 @@ test("codes are the default and expansion changes representation without fetchin
     assert.deepEqual(expanded.data[0].attributes.restrictions, [
         { code: 3, name: "Membership Required" },
     ]);
+    assert.deepEqual(expanded.data[0].attributes.price.products, {
+        1: { name: "Unleaded Petrol", amount: 185.9 },
+    });
     assert.equal(expanded.data[0].id, compact.data[0].id);
     assert.notEqual(
         expandedResponse.headers.get("ETag"),
@@ -102,8 +106,79 @@ test("codes are the default and expansion changes representation without fetchin
     const fields = (await selective.json()).data[0].attributes;
     assert.deepEqual(fields.brand, expanded.data[0].attributes.brand);
     assert.deepEqual(fields.siteFeatures, [4, 5]);
+    assert.deepEqual(fields.price, attributes.price);
     assert.equal(requests.length, 1);
     assert.equal(new URL(requests[0]).searchParams.has("expand"), false);
+});
+
+test("product expansion names every selected fuel and reuses snapshots and equivalent rendered responses", async () => {
+    origin = (request) =>
+        new Response(
+            xml().replace(
+                "185.9",
+                String(
+                    180 +
+                        Number(
+                            new URL(request.url).searchParams.get("Product"),
+                        ),
+                ),
+            ),
+        );
+    const response = await fetchWorker("/v1?expand=product");
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    const attributes = body.data[0].attributes;
+    assert.deepEqual(attributes.price.products, {
+        1: { name: "Unleaded Petrol", amount: 181 },
+        2: { name: "Premium Unleaded 95", amount: 182 },
+        4: { name: "Diesel", amount: 184 },
+        5: { name: "LPG", amount: 185 },
+        6: { name: "Premium Unleaded 98", amount: 186 },
+        10: { name: "E85", amount: 190 },
+        11: { name: "Brand Diesel", amount: 191 },
+    });
+    assert.equal(typeof attributes.brand, "number");
+    assert.deepEqual(attributes.siteFeatures, []);
+    assert.equal(attributes.restrictions, null);
+    assert.equal(attributes.price.asAt, body.meta.validFrom);
+    assert.equal(requests.length, 7);
+
+    const compact = await fetchWorker("/v1");
+    const compactBody = await compact.json();
+    assert.equal(compactBody.data[0].id, body.data[0].id);
+    assert.deepEqual(compactBody.meta, body.meta);
+    assert.equal(compactBody.data[0].attributes.price.products[1], 181);
+    assert.notEqual(compact.headers.get("ETag"), response.headers.get("ETag"));
+
+    const equivalent = "/v1?ExPaNd=%20PRODUCT,product%20";
+    const conditional = await fetchWorker(equivalent, {
+        headers: { "If-None-Match": response.headers.get("ETag") },
+    });
+    assert.equal(conditional.status, 304);
+    assert.equal(await conditional.text(), "");
+    const head = await fetchWorker(equivalent, { method: "HEAD" });
+    assert.equal(head.status, 200);
+    assert.equal(head.headers.get("ETag"), response.headers.get("ETag"));
+    assert.equal(await head.text(), "");
+
+    const subset = await fetchWorker(
+        "/v1?filter[product]=2,6&expand=brand,product",
+    );
+    const filtered = await subset.json();
+    assert.equal(subset.status, 200);
+    assert.equal(filtered.data[0].id, body.data[0].id);
+    assert.deepEqual(filtered.data[0].attributes.price.products, {
+        2: attributes.price.products[2],
+        6: attributes.price.products[6],
+    });
+    assert.equal(typeof filtered.data[0].attributes.brand, "object");
+    assert.equal(requests.length, 7);
+    assert.ok(
+        requests.every(
+            (url) => !new URL(url).search.toLowerCase().includes("expand"),
+        ),
+    );
+    assert.equal((await fetchWorker("/legacy?expand=product")).status, 400);
 });
 
 test("invalid expansion is rejected before upstream access", async () => {
