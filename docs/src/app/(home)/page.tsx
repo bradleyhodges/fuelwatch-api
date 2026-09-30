@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { appName } from "@/lib/shared";
+import { BrandLogo } from "@/components/brand-logo";
 
 const features = [
     {
@@ -26,10 +26,10 @@ const features = [
 
 export default function HomePage() {
     return (
-        <main className="mx-auto flex max-w-4xl flex-1 flex-col justify-center px-6 py-20 md:py-28">
-            <p className="mb-4 font-semibold text-fd-muted-foreground text-sm uppercase tracking-widest">
-                {appName}
-            </p>
+        <div className="mx-auto flex w-full min-w-0 max-w-4xl flex-1 flex-col justify-center px-6 py-20 md:py-28">
+            <div className="mb-6">
+                <BrandLogo prominent />
+            </div>
             <h1 className="mb-5 font-semibold text-4xl text-fd-foreground tracking-tight md:text-5xl">
                 Western Australian fuel prices{" "}
                 <span className="font-normal text-fd-muted-foreground">
@@ -93,6 +93,6 @@ export default function HomePage() {
                     .
                 </p>
             </div>
-        </main>
+        </div>
     );
 }
