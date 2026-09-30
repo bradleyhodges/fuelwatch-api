@@ -14,7 +14,7 @@ alt="fuelwatch-api" height="50"/>
     <a href="https://github.com/bradleyhodges/fuelwatch-api">
 				<img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repo" />
     </a>
-    <a href="https://github.com/bradleyhodges/sfsymbols/blob/stable/LICENSE">
+    <a href="https://github.com/bradleyhodges/fuelwatch-api/blob/stable/LICENSE">
 				<img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="License: MIT" />
     </a>
 </p>
@@ -26,8 +26,8 @@ alt="fuelwatch-api" height="50"/>
   • <a href="#-getting-started">🚀 Getting started</a>
   • <a href="#freshness-and-failure-handling">Data freshness</a>
   • <a href="#self-hosting">Self-hosting</a>
-  • <a href="https://github.com/bradleyhodges/sfsymbols/issues">Issues</a>
-  • <a href="https://github.com/bradleyhodges/sfsymbols/pulls">Pull Requests</a>
+  • <a href="https://github.com/bradleyhodges/fuelwatch-api/issues">Issues</a>
+  • <a href="https://github.com/bradleyhodges/fuelwatch-api/pulls">Pull Requests</a>
 </p>
 </div>
 
