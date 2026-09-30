@@ -755,7 +755,7 @@
           10,
           11
         ],
-        "description": "FuelWatch product identifier. There is no product 3."
+        "description": "FuelWatch product identifier. There is no product 3. See the [product codes](/docs/api-reference/codes#products) for names."
       },
       "BrandCode": {
         "type": "integer",
@@ -800,7 +800,7 @@
           52,
           53
         ],
-        "description": "FuelWatch brand code. Reserved response-only code 0 means unmapped; sourceNotes.brand retains its name."
+        "description": "FuelWatch brand code. Reserved response-only code 0 means unmapped; sourceNotes.brand retains its name. See the [brand codes](/docs/api-reference/codes#brands) for names."
       },
       "FeatureCode": {
         "type": "integer",
@@ -827,7 +827,7 @@
           20,
           21
         ],
-        "description": "Stable API feature identifier; not an array position."
+        "description": "Stable API feature identifier; not an array position. See the [site feature codes](/docs/api-reference/codes#site-features) for names."
       },
       "RestrictionCode": {
         "type": "integer",
@@ -837,7 +837,7 @@
           3,
           4
         ],
-        "description": "Stable API restriction identifier."
+        "description": "Stable API restriction identifier. See the [restriction codes](/docs/api-reference/codes#restrictions) for names."
       },
       "Brand": {
         "type": "object",
