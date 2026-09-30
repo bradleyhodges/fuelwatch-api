@@ -1,0 +1,38 @@
+{
+    "[javascript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "biome.lsp.bin": {
+        "win32-x64": "${workspaceFolder}/node_modules/.bin/biome.CMD",
+        "win32-arm64": "${workspaceFolder}/node_modules/.bin/biome.CMD",
+        "linux-x64": "${workspaceFolder}/node_modules/.bin/biome",
+        "darwin-x64": "${workspaceFolder}/node_modules/.bin/biome",
+        "darwin-arm64": "${workspaceFolder}/node_modules/.bin/biome"
+    },
+    "editor.codeActionsOnSave": {
+        "quickfix.biome": "explicit",
+        "source.organizeImports.biome": "explicit"
+    },
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "emmet.showExpandedAbbreviation": "never",
+    "prettier.enable": false,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "tailwindCSS.experimental.configFile": "packages/design-system/styles/globals.css",
+    "files.associations": {
+        "wrangler.json": "jsonc"
+    }
+}

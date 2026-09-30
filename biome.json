@@ -1,0 +1,141 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+    "vcs": {
+        "enabled": false,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "formatter": {
+        "enabled": true,
+        "includes": [
+            "**",
+            "!**/packages/design-system/components/ui/**",
+            "!**/packages/design-system/components/kumo/**"
+        ],
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "preset": "recommended",
+            "nursery": {
+                "useSortedClasses": {
+                    "level": "warn",
+                    "options": {
+                        "attributes": ["classList", "className", "class"],
+                        "functions": ["clsx", "cva", "tw", "cn"]
+                    },
+                    "fix": "safe"
+                }
+            },
+            "a11y": {
+                "useSemanticElements": {
+                    "level": "off"
+                },
+                "noLabelWithoutControl": {
+                    "level": "warn"
+                },
+                "useAriaPropsSupportedByRole": {
+                    "level": "warn"
+                },
+                "useAnchorContent": {
+                    "level": "warn"
+                },
+                "noSvgWithoutTitle": {
+                    "level": "warn"
+                }
+            },
+            "performance": {
+                "noDelete": {
+                    "level": "off"
+                }
+            },
+            "correctness": {
+                "useExhaustiveDependencies": {
+                    "level": "off",
+                    "options": {}
+                },
+                "useHookAtTopLevel": {
+                    "level": "warn"
+                },
+                "noUnreachable": {
+                    "level": "warn"
+                }
+            },
+            "suspicious": {
+                "noImplicitAnyLet": {
+                    "level": "warn"
+                },
+                "noArrayIndexKey": {
+                    "level": "warn"
+                },
+                "useIterableCallbackReturn": {
+                    "level": "warn"
+                }
+            }
+        },
+        "includes": ["**", "!**/packages/design-system/components/ui/**"]
+    },
+    "css": {
+        "formatter": {
+            "enabled": true,
+            "indentStyle": "space",
+            "indentWidth": 4
+        },
+        "linter": {
+            "enabled": true
+        },
+        "parser": {
+            "cssModules": true,
+            "tailwindDirectives": true
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "always",
+            "bracketSameLine": false,
+            "bracketSpacing": true,
+            "jsxQuoteStyle": "double",
+            "quoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "semicolons": "always",
+            "trailingCommas": "all"
+        }
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "includes": [
+            "**",
+            "!**/node_modules",
+            "!**/dist",
+            "!**/build",
+            "!**/.next",
+            "!**/.basehub",
+            "!**/.vercel",
+            "!**/.pnpm",
+            "!**/.vscode",
+            "!**/.git",
+            "!**/.cache",
+            "!**/cache",
+            "!!**/*.svg",
+            "!!**/supabase/.temp",
+            "!**/apps/docs/**/*.json",
+            "!**/apps/api/app/ingest/ncts/**/*.json",
+            "!**/apps/www/public/pagedone",
+            "!**/.content-collections/generated",
+            "!**/types/generated",
+            "!**/runtime.*",
+            "!**/worker-configuration.d.ts",
+            "!**/next-env.d.ts",
+            "!**/.image-optimizer-cache.json",
+            "!**/*.md",
+            "!**/.agents",
+            "!**/.cursor",
+            "!**/.github",
+            "!**/.turbo",
+            "!**/.deepsec"
+        ]
+    }
+}
